@@ -1,0 +1,14 @@
+<RCC>
+    <qresource prefix="/placeholder">
+        <file>battleship.png</file>
+        <file>setupPlayer1.png</file>
+        <file>setupPlayer2.png</file>
+        <file>versus.png</file>
+        <file>singleplayer.png</file>
+        <file>quit.png</file>
+    </qresource>
+    <qresource prefix="/sounds">
+        <file>Splash.mp3</file>
+        <file>Explosion.mp3</file>
+    </qresource>
+</RCC>
