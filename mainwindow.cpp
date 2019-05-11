@@ -28,9 +28,14 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(firstscreen,SIGNAL(clickedQuit()),qApp,SLOT(quit()));
 
     //connect move next signals to slots
-    connect(singleplayerSetup,SIGNAL(moveNext()),this,SLOT(switchGameScreen()));
-    connect(versusSetup1,SIGNAL(moveNext()),this,SLOT(switchSetup2()));
-    connect(versusSetup2,SIGNAL(moveNext()),this,SLOT(switchGameScreen()));
+    connect(singleplayerSetup,SIGNAL(moveNext(int,ShipType[10][10])),this,SLOT(switchGameScreen()));
+    connect(versusSetup1,SIGNAL(moveNext(int,ShipType[10][10])),this,SLOT(switchSetup2()));
+    connect(versusSetup2,SIGNAL(moveNext(int,ShipType[10][10])),this,SLOT(switchGameScreen()));
+
+    //when setup is done, transfers grid data to GameScreen
+    connect(singleplayerSetup,SIGNAL(moveNext(int,ShipType[10][10])),game,SLOT(setBoard(int,ShipType[10][10])));
+    connect(versusSetup1,SIGNAL(moveNext(int,ShipType[10][10])),game,SLOT(setBoard(int,ShipType[10][10])));
+    connect(versusSetup1,SIGNAL(moveNext(int,ShipType[10][10])),game,SLOT(setBoard(int,ShipType[10][10])));
 
     setCentralWidget(stackedWidget);
 }

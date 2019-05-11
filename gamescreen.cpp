@@ -7,11 +7,7 @@ GameScreen::GameScreen(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    QPixmap textImage(":/Player1.png");
-    ui->lbl_player1->setPixmap(textImage);
-
     srand(time(0)); // set random seed
-    clearGrid();
 
     initialSize = destroyedShips.size();
 
@@ -314,17 +310,17 @@ void GameScreen::paintBoard(QPainter& painter)
     {
         for (int j = 0; j < 10; ++j)
         {
-            if (player2Board[i][j] == blank)
+            if (player2HitMiss[i][j] == blank)
             {
                 continue;
             }
-            else if (player2Board[i][j] == hit)
+            else if (player2HitMiss[i][j] == hit)
             {
                 painter.setBrush(Qt::red);
                 QRect attack(i*46, j*46, 46, 46);
                 painter.drawRect(attack);
             }
-            else if (player2Board[i][j] == miss)
+            else if (player2HitMiss[i][j] == miss)
             {
                 painter.setBrush(Qt::blue);
                 QRect miss(i*46, j*46, 46, 46);
@@ -339,17 +335,17 @@ void GameScreen::paintBoard(QPainter& painter)
     {
         for (int j = 0; j < 10; ++j)
         {
-            if (player1Board[i][j] == blank)
+            if (player1HitMiss[i][j] == blank)
             {
                 continue;
             }
-            else if (player1Board[i][j] == hit)
+            else if (player1HitMiss[i][j] == hit)
             {
                 painter.setBrush(Qt::red);
                 QRect attack(i*46, j*46, 46, 46);
                 painter.drawRect(attack);
             }
-            else if (player1Board[i][j] == miss)
+            else if (player1HitMiss[i][j] == miss)
             {
                 painter.setBrush(Qt::blue);
                 QRect miss(i*46, j*46, 46, 46);
@@ -440,9 +436,9 @@ void GameScreen::gameplay(QPainter &painter)
                 }
             }
 
-            if (player1Ships[rand_x_grid_pos][rand_y_grid_pos] != empty) // if there is a ship
+            if (player1Grid[rand_x_grid_pos][rand_y_grid_pos] != empty) // if there is a ship
             {
-                if (player1Board[rand_x_grid_pos][rand_y_grid_pos] == blank) // if coordinate has not been hit
+                if (player1HitMiss[rand_x_grid_pos][rand_y_grid_pos] == blank) // if coordinate has not been hit
                 {
                     ++squaresHit;
                     if (squaresHit > 1 && successful_second_hit == false)  // hit second square
@@ -450,8 +446,8 @@ void GameScreen::gameplay(QPainter &painter)
                         successful_second_hit = true;
                         continue_direction = rand_direction;  // continue with the current direction
                     }
-                    player1Board[rand_x_grid_pos][rand_y_grid_pos] = hit;
-                    updateHits(player1Ships[rand_x_grid_pos][rand_y_grid_pos]); // update ships destroyed counter
+                    player1HitMiss[rand_x_grid_pos][rand_y_grid_pos] = hit;
+                    updateHits(player1Grid[rand_x_grid_pos][rand_y_grid_pos]); // update ships destroyed counter
                     QTimer::singleShot(0, this, SLOT(soundUpdate())); // delay before next attack
                 }
                 else // if chosen coordinate has already been hit
@@ -461,7 +457,7 @@ void GameScreen::gameplay(QPainter &painter)
             }
             else // if there is no ship
             {
-                if (player1Board[rand_x_grid_pos][rand_y_grid_pos] == blank) // if coordinate has not been missed
+                if (player1HitMiss[rand_x_grid_pos][rand_y_grid_pos] == blank) // if coordinate has not been missed
                 {
                     if (squaresHit > 1) // if ship has not been destroyed completely
                     {
@@ -481,7 +477,7 @@ void GameScreen::gameplay(QPainter &painter)
                                 break;
                         }
                     }
-                    player1Board[rand_x_grid_pos][rand_y_grid_pos] = miss;
+                    player1HitMiss[rand_x_grid_pos][rand_y_grid_pos] = miss;
                     // turn off name
                     player1_turn = true; // Player 1's turn
                     QTimer::singleShot(0, this, SLOT(soundUpdate())); // delay before miss
@@ -500,21 +496,21 @@ void GameScreen::gameplay(QPainter &painter)
                 int x_grid_pos = (click_x - 32) /46;
                 int y_grid_pos = (click_y - 200) / 46;
 
-                if (player1Ships[x_grid_pos][y_grid_pos] != empty) // if there is a ship
+                if (player1Grid[x_grid_pos][y_grid_pos] != empty) // if there is a ship
                 {
-                    if (player1Board[x_grid_pos][y_grid_pos] == blank) // if coordinate has not been hit
+                    if (player1HitMiss[x_grid_pos][y_grid_pos] == blank) // if coordinate has not been hit
                     {
-                        player1Board[x_grid_pos][y_grid_pos] = hit;
-                        updateHits(player1Ships[x_grid_pos][y_grid_pos]); // update ships destroyed counter
+                        player1HitMiss[x_grid_pos][y_grid_pos] = hit;
+                        updateHits(player1Grid[x_grid_pos][y_grid_pos]); // update ships destroyed counter
                         explosion->play();
                         update();
                     }
                 }
                 else
                 {
-                    if (player1Board[x_grid_pos][y_grid_pos] == blank)
+                    if (player1HitMiss[x_grid_pos][y_grid_pos] == blank)
                     {
-                        player1Board[x_grid_pos][y_grid_pos] = miss;
+                        player1HitMiss[x_grid_pos][y_grid_pos] = miss;
                         splash->play();
                         // turn off name
                         player1_turn = true;
@@ -534,21 +530,21 @@ void GameScreen::gameplay(QPainter &painter)
             int x_grid_pos = (click_x - 532) /46;
             int y_grid_pos = (click_y - 200) / 46;
 
-            if (player2Ships[x_grid_pos][y_grid_pos] != empty)
+            if (player2Grid[x_grid_pos][y_grid_pos] != empty)
             {
-                if (player2Board[x_grid_pos][y_grid_pos] == blank)
+                if (player2HitMiss[x_grid_pos][y_grid_pos] == blank)
                 {
-                    player2Board[x_grid_pos][y_grid_pos] = hit;
-                    updateHits(player2Ships[x_grid_pos][y_grid_pos]);
+                    player2HitMiss[x_grid_pos][y_grid_pos] = hit;
+                    updateHits(player2Grid[x_grid_pos][y_grid_pos]);
                     explosion->play();
                     update();
                 }
             }
             else
             {
-                if (player2Board[x_grid_pos][y_grid_pos] == blank)
+                if (player2HitMiss[x_grid_pos][y_grid_pos] == blank)
                 {
-                    player2Board[x_grid_pos][y_grid_pos] = miss;
+                    player2HitMiss[x_grid_pos][y_grid_pos] = miss;
                     splash->play();
                     // turn off name
                     player1_turn = false;
@@ -663,31 +659,6 @@ void GameScreen::mousePressEvent(QMouseEvent* event)
     }
 }
 
-void GameScreen::clearGrid()
-{
-    for(int i = 0; i<10; ++i)
-    {
-        for(int j=0; j<10; ++j)
-        {
-            player1Board[i][j] = blank;
-            player2Board[i][j] = blank;
-            player2Ships[i][j] = empty;
-            player1Ships[i][j] = empty;
-        }
-    }
-    player1Ships[3][4] = carrier;
-    player1Ships[3][5] = carrier;
-    player1Ships[3][6] = carrier;
-    player1Ships[3][7] = carrier;
-    player1Ships[3][8] = carrier;
-
-    player1Ships[5][4] = submarine;
-    player1Ships[6][4] = submarine;
-    player1Ships[7][4] = submarine;
-    player1Ships[8][4] = submarine;
-
-}
-
 void GameScreen::soundUpdate()
 {
     if (!player1_turn)
@@ -699,5 +670,20 @@ void GameScreen::soundUpdate()
         splash->play();
     }
     update();
+}
+
+void GameScreen::setBoard(int playerx, ShipType arr[10][10])
+{
+    if(playerx==1)
+    {
+        for(int i =0; i<10; i++) {
+            for(int j =0; j<10; j++)
+                player1Grid[i][j] = arr[i][j];}
+    }
+    else if(playerx==2){
+        for(int i =0; i<10; i++) {
+            for(int j =0; j<10; j++)
+                player2Grid[i][j] = arr[i][j];}
+    }
 }
 

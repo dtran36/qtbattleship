@@ -1,21 +1,22 @@
 #include "setupscreen.h"
 #include "ui_setupscreen.h"
 
-SetupScreen::SetupScreen(int player,QWidget *parent) :
+SetupScreen::SetupScreen(int x,QWidget *parent) :
     QFrame(parent),
-    ui(new Ui::SetupScreen)
+    ui(new Ui::SetupScreen),
+    player(x)
 {
     ui->setupUi(this);
 
-    if(player==1) //player 1 specified
+    if(x==1) //player 1 specified
     {
-        QPixmap textImage(":/placeholder/setupPlayer1.png");
+        QPixmap textImage(":/images/setupPlayer1.png");
         ui->lblSetupTitle->setPixmap(textImage);
         setWindowTitle("Setup Player 1");
     }
     else //default is player 2
     {
-        QPixmap textImage(":/placeholder/setupPlayer2.png");
+        QPixmap textImage(":/images/setupPlayer2.png");
         ui->lblSetupTitle->setPixmap(textImage);
         setWindowTitle("Setup Player 2");
     }
@@ -301,7 +302,7 @@ void SetupScreen::confirmPlacement()
     //checks if all ships are placed after every confirm
     if (checkSetupDone())
     {
-        emit moveNext();
+        emit moveNext(player,grid);
     }
 }
 
@@ -312,6 +313,14 @@ void SetupScreen::cancelPlacement()
     repaint();
     curButton->show(); // reshow current ship button
     focusShipButtons();
+}
+
+void SetupScreen::getGrid(ShipType arr[10][10])
+{
+    for(int i =0; i<10; i++) {
+        for(int j =0; j<10; j++)
+            arr[i][j] = grid[i][j];
+    }
 }
 
 SetupScreen::~SetupScreen()

@@ -36,10 +36,8 @@ public:
      */
     void paintEvent(QPaintEvent* event) override;
     ~GameScreen() override;
-    /**
-     * @brief clearGrid Sets players' boards to blank
-     */
-    void clearGrid();
+
+
 
     /**
      * @brief paintText Paints board column and row text
@@ -77,11 +75,15 @@ public:
 
 //    void checkIfWinner();
 
+public slots:
+    void setBoard(int playerx, ShipType arr[10][10]);
+
 private slots:
     /**
      * @brief soundUpdate Delays paint of the computer's actions
      */
     void soundUpdate();
+
 
 private:
     Ui::GameScreen *ui;
@@ -91,10 +93,10 @@ private:
      */
     void mousePressEvent(QMouseEvent* event) override;
 
-    ShipType player1Ships[10][10];
-    ShipType player2Ships[10][10];
-    HitorMiss player1Board[10][10];
-    HitorMiss player2Board[10][10];
+    ShipType player1Grid[10][10];
+    ShipType player2Grid[10][10];
+    HitorMiss player1HitMiss[10][10];
+    HitorMiss player2HitMiss[10][10];
 
     int click_x = 0;
     int click_y = 0;

@@ -19,17 +19,19 @@ class SetupScreen : public QFrame
 public:
     /**
      * @brief SetupScreen Constructs hidden QDialog window.
-     * @param player which player(1,2) to set QPixmap image
+     * @param x which player(1,2) to set QPixmap image
      * @param parent
      */
-    explicit SetupScreen(int player=1,QWidget *parent = nullptr);
+    explicit SetupScreen(int x=1,QWidget *parent = nullptr);
     ~SetupScreen();
+
+    void getGrid (ShipType arr[10][10]);
 
 signals:
     /**
      * @brief moveNext All ships placed, move to next widget.
      */
-    void moveNext();
+    void moveNext(int playerx, ShipType arr[10][10]);
 
 private slots:
     void on_pushCarrier_clicked();
@@ -122,6 +124,8 @@ private:
     bool checkSetupDone();
 
     bool currentFocusShips = true; //!<true if currently focusing ships
+
+    int player;
 };
 
 #endif // SETUPSCREEN_H
