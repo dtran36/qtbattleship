@@ -1,8 +1,6 @@
 #include "setupscreen.h"
 #include "ui_setupscreen.h"
 
-#include<QDebug>
-
 SetupScreen::SetupScreen(int x,QWidget *parent) :
     QFrame(parent),
     ui(new Ui::SetupScreen),
@@ -304,14 +302,8 @@ void SetupScreen::confirmPlacement()
     //checks if all ships are placed after every confirm
     if (checkSetupDone())
     {
-        for(int i=0; i<10; i++)
-        {
-            for(int j=0; j<10; j++)
-            {
-                qDebug()<<grid[i][j];
-            }
-        }
-        emit moveNext(player,grid);
+       test = new matrix(grid);
+       emit moveNext(player,*test);
     }
 }
 

@@ -7,6 +7,8 @@
 #include"setupscreen.h"
 #include"gamescreen.h"
 
+#include"matrix.h"
+
 namespace Ui {
 class MainWindow;
 }
@@ -44,7 +46,6 @@ public slots:
      * @brief switchGameScreen Switches to Game Screen.
      */
     void switchGameScreen();
-
 private:
     Ui::MainWindow *ui;
 

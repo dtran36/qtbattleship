@@ -6,9 +6,6 @@
 #include <QFrame>
 #include <QPainter>
 #include <QMouseEvent>
-//#include <QMediaPlayer>
-//#include <QSet>
-//#include <QString>
 
 enum HitorMiss{unknown, hit, miss};
 
@@ -25,7 +22,7 @@ public:
      * @brief GameScreen Constructs GameScreen window
      * @param parent base class
      */
-    explicit GameScreen(QWidget *parent = 0);
+    explicit GameScreen(QWidget *parent = nullptr);
     /**
      * @brief paintEvent Paints board based on player actions
      * @param event
@@ -34,34 +31,18 @@ public:
     void paintEvent(QPaintEvent* event) override;
     ~GameScreen() override;
 
-
     void paintBoardLabels(QPainter& painter);
-
-    /**
-     * @brief checkIfDestroyed Checks if players' ships are destroyed
-     */
     void checkIfDestroyed();
 
-    /**
-     * @brief updateShips If players' ships are destroyed, paint red. Else paint black
-     * @param painter
-     * @param x_coord x position to start painting
-     * @param y_coord y position to start painting
-     */
-    void updateShips(QPainter& painter, int x_coord, int y_coord);
-
 public slots:
-    void setGrid(int player, ShipType arr[10][10]);
+    void setGrid(int player, const matrix& b);
 
 private slots:
-//    void playerXWins(const int& x);
+    void playerXWins(const int x);
 
 private:
     Ui::GameScreen *ui;
-    /**
-     * @brief mousePressEvent Update mouse position if mouse is clicked
-     * @param event
-     */
+
     void mousePressEvent(QMouseEvent* event) override;
 
     ShipType player1Grid[10][10];

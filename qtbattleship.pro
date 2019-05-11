@@ -29,6 +29,7 @@ SOURCES += \
         main.cpp \
         mainmenu.cpp \
         mainwindow.cpp \
+        matrix.cpp \
         setupscreen.cpp \
         ship.cpp
 
@@ -36,6 +37,7 @@ HEADERS += \
         gamescreen.h \
         mainmenu.h \
         mainwindow.h \
+        matrix.h \
         setupscreen.h \
         ship.h
 

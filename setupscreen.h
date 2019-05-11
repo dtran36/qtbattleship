@@ -8,6 +8,8 @@
 #include<QPushButton>
 #include"ship.h"
 
+#include"matrix.h"
+
 namespace Ui {
 class SetupScreen;
 }
@@ -30,17 +32,13 @@ signals:
     /**
      * @brief moveNext All ships placed, move to next widget.
      */
-    void moveNext(int playerx, ShipType arr[10][10]);
+    void moveNext(int playerx, const matrix& m);
 
 private slots:
     void on_pushCarrier_clicked();
-
     void on_pushBattleship_clicked();
-
     void on_pushSubmarine_clicked();
-
     void on_pushDestroyer_clicked();
-
     void on_pushPatrol_clicked();
 
     /**
@@ -62,6 +60,7 @@ private slots:
      * @brief Acts when cancel button is clicked.
      */
     void on_pushButton_2_clicked();
+
 private:
     Ui::SetupScreen *ui;
 
@@ -125,6 +124,7 @@ private:
     bool currentFocusShips = true; //!<true if currently focusing ships
 
     int player;
+    matrix *test = nullptr;
 };
 
 #endif // SETUPSCREEN_H

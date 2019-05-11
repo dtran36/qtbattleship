@@ -126,9 +126,6 @@
         </property>
        </widget>
       </item>
-      <item>
-       <widget class="QLCDNumber" name="lcd_left"/>
-      </item>
      </layout>
     </widget>
    </widget>
@@ -195,9 +192,6 @@
       </rect>
      </property>
      <layout class="QHBoxLayout" name="playerLayoutRight">
-      <item>
-       <widget class="QLCDNumber" name="lcd_right"/>
-      </item>
       <item>
        <widget class="QLabel" name="patrolRight">
         <property name="text">

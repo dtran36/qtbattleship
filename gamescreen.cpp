@@ -1,8 +1,6 @@
 #include "gamescreen.h"
 #include "ui_gamescreen.h"
 
-#include<QDebug>
-
 GameScreen::GameScreen(QWidget *parent) :
     QFrame(parent),
     ui(new Ui::GameScreen)
@@ -18,22 +16,70 @@ GameScreen::GameScreen(QWidget *parent) :
         for(int j=0; j<10; j++)
         {
             player1HitorMiss[i][j]=unknown;
+            player2HitorMiss[i][j]=unknown;
         }
     }
-
-//    for(int i=0; i<10; i++)
-//    {
-//        for(int j=0; j<10; j++)
-//        {
-//            player1Grid[i][j]=empty;
-//            player2Grid[i][j]=empty;
-//        }
-//    }
 }
 
-GameScreen::~GameScreen()
+void GameScreen::setGrid(int player, const matrix& b)
 {
-    delete ui;
+    if(player==1)
+        b.get_data(player1Grid);
+    else //if(player==2)
+        b.get_data(player2Grid);
+}
+
+void GameScreen::paintEvent(QPaintEvent* event)
+{
+    QPainter painter(this);
+
+    //board labels
+    paintBoardLabels(painter);
+
+    //current player turn
+    if(currentPlayer==1)
+    {
+        ui->lbl_FingerLeft->show();
+        ui->lbl_FingerRight->hide();
+    }
+    else {
+        ui->lbl_FingerLeft->hide();
+        ui->lbl_FingerRight->show();
+    }
+
+    for(int i =0; i<10; i++)
+    {
+        for(int j=0; j<10; j++)
+        {
+            //left board
+            if(player1HitorMiss[i][j]==miss)
+            {
+                painter.setBrush(Qt::yellow);
+                QRectF test((i*46)+33, (j*46)+200, 46, 46);
+                painter.drawRect(test);
+            }
+            if(player1HitorMiss[i][j]==hit)
+            {
+                painter.setBrush(Qt::red);
+                QRectF test((i*46)+33, (j*46)+200, 46, 46);
+                painter.drawRect(test);
+            }
+
+            //right board
+            if(player2HitorMiss[i][j]==miss)
+            {
+                painter.setBrush(Qt::yellow);
+                QRectF test((i*46)+533, (j*46)+200, 46, 46);
+                painter.drawRect(test);
+            }
+            if(player2HitorMiss[i][j]==hit)
+            {
+                painter.setBrush(Qt::red);
+                QRectF test((i*46)+533, (j*46)+200, 46, 46);
+                painter.drawRect(test);
+            }
+        }
+    }
 }
 
 void GameScreen::paintBoardLabels(QPainter& painter)
@@ -77,6 +123,57 @@ void GameScreen::paintBoardLabels(QPainter& painter)
     }
 }
 
+void GameScreen::mousePressEvent(QMouseEvent* event)
+{
+    click_x = event->x();
+    click_y = event->y();
+
+    if(currentPlayer==1)
+    {
+        if(click_x>500 || click_y<200) return;
+        int x_grid_pos = (click_x - 32) /46;
+        int y_grid_pos = (click_y - 200) / 46;
+
+        if(player1HitorMiss[x_grid_pos][y_grid_pos]!=unknown) return;
+
+        if(player1Grid[x_grid_pos][y_grid_pos]==empty)
+        {
+            player1HitorMiss[x_grid_pos][y_grid_pos]=miss;
+        }
+        else {
+            player1Ships[player1Grid[x_grid_pos][y_grid_pos]]--;
+            player1Grid[x_grid_pos][y_grid_pos]=empty;
+            player1HitorMiss[x_grid_pos][y_grid_pos]=hit;
+            checkIfDestroyed();
+        }
+
+        currentPlayer=2;
+    }
+    else //if (currentPlayer==2)
+    {
+        if(click_y<200) return;
+        int x_grid_pos = (click_x - 534) /46;
+        int y_grid_pos = (click_y - 202) / 46;
+
+        if(player2HitorMiss[x_grid_pos][y_grid_pos]!=unknown) return;
+
+        if(player2Grid[x_grid_pos][y_grid_pos]==empty)
+        {
+            player2HitorMiss[x_grid_pos][y_grid_pos]=miss;
+        }
+        else {
+            player2Ships[player2Grid[x_grid_pos][y_grid_pos]]--;
+            player2Grid[x_grid_pos][y_grid_pos]=empty;
+            player2HitorMiss[x_grid_pos][y_grid_pos]=hit;
+            checkIfDestroyed();
+        }
+
+        currentPlayer=1;
+    }
+
+    update();
+}
+
 void GameScreen::checkIfDestroyed()
 {
     if(player1Ships[carrier]==0) ui->carrierLeft->hide();
@@ -93,129 +190,29 @@ void GameScreen::checkIfDestroyed()
 
     bool winPlayer1=true;
     bool winPlayer2=true;
-    for(int i=0; i<5;i++)
+    for(int i=0; i<6;i++)
     {
         if(player1Ships[i]!=0)
             winPlayer1=false;
         if(player2Ships[i]!=0)
             winPlayer2=false;
     }
-//    if(winPlayer1){playerXWins(1);}
-//    if(winPlayer2){playerXWins(2);}
+    if(winPlayer1){playerXWins(1);}
+    if(winPlayer2){playerXWins(2);}
 }
 
-void GameScreen::updateShips(QPainter& painter, int x_coord, int y_coord){}
-
-void GameScreen::paintEvent(QPaintEvent* event)
+void GameScreen::playerXWins(const int x)
 {
-    QPainter painter(this);
-
-    //board labels
-    paintBoardLabels(painter);
-
-    //current player turn
-    if(currentPlayer==1)
+    if(x==1)
     {
-        ui->lbl_FingerLeft->show();
-        ui->lbl_FingerRight->hide();
+        ui->lbl_Player2->hide();
     }
     else {
-        ui->lbl_FingerLeft->hide();
-        ui->lbl_FingerRight->show();
-    }
-
-    for(int i =0; i<10; i++)
-    {
-        for(int j=0; j<10; j++)
-        {
-            if(player1Grid[i][j]!=empty)
-            {
-                painter.setBrush(Qt::darkGray);
-                QRectF test((i*46)+33, (j*46)+200, 46, 46); // box height & width = 60
-                painter.drawRect(test);
-            }
-        }
+        ui->lbl_Player1->hide();
     }
 }
 
-void GameScreen::mousePressEvent(QMouseEvent* event)
+GameScreen::~GameScreen()
 {
-    click_x = event->x();
-    click_y = event->y();
-
-//    ui->lcd_left->display(x_grid_pos);
-//    ui->lcd_right->display(y_grid_pos);
-
-    if(currentPlayer==1)
-    {
-//        if(click_x>500 || click_y<200) return;
-//        int x_grid_pos = (click_x - 32) /46;
-//        int y_grid_pos = (click_y - 200) / 46;
-
-//        if(player1HitorMiss[x_grid_pos][y_grid_pos]!=unknown) return;
-
-//        else {
-//            if(player1Grid[x_grid_pos][y_grid_pos]==empty)
-//            {
-//                player1HitorMiss[x_grid_pos][y_grid_pos]=miss;
-//            }
-//            else {
-//                player1Ships[player1Grid[x_grid_pos][y_grid_pos]]--;
-//                player1Grid[x_grid_pos][y_grid_pos]=empty;
-//                player1HitorMiss[x_grid_pos][y_grid_pos] = hit;
-//                checkIfDestroyed();
-//            }
-//        }
-        currentPlayer=2;
-    }
-    else //if (currentPlayer==2)
-    {
-        if(click_x<500 || click_y<200) return;
-        int x_grid_pos = (click_x - 534) /46;
-        int y_grid_pos = (click_y - 202) / 46;
-
-
-//        if(player2HitorMiss[x_grid_pos][y_grid_pos]!=unknown) return;
-
-//        else {
-//            if(player2Grid[x_grid_pos][y_grid_pos]==empty)
-//            {
-//                player2HitorMiss[x_grid_pos][y_grid_pos]=miss;
-//            }
-//            else {
-//                player2Ships[player2Grid[x_grid_pos][y_grid_pos]]--;
-//                player2Grid[x_grid_pos][y_grid_pos]=empty;
-//                player2HitorMiss[x_grid_pos][y_grid_pos] = hit;
-//                checkIfDestroyed();
-//            }
-//        }
-        currentPlayer=1;
-    }
-    update();
-}
-
-
-void GameScreen::setGrid(int player, ShipType arr[10][10])
-{
-    if(player==1)
-    {
-        for(int i =0; i<10; i++) {
-            for(int j =0; j<10; j++)
-                player1Grid[i][j] = arr[i][j];}
-
-        for(int i=0; i<10; i++)
-        {
-            for(int j=0; j<10; j++)
-            {
-                qDebug()<<arr[i][j]<<" ";
-            }
-            qDebug()<<endl;
-        }
-    }
-    else //if(player==2)
-    {
-        for(int i =0; i<10; i++) {
-            for(int j =0; j<10; j++)
-                player2Grid[i][j] = arr[i][j];}
-    }
+    delete ui;
 }
