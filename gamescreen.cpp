@@ -1,22 +1,34 @@
 #include "gamescreen.h"
 #include "ui_gamescreen.h"
 
+#include<QDebug>
+
 GameScreen::GameScreen(QWidget *parent) :
     QFrame(parent),
     ui(new Ui::GameScreen)
 {
     ui->setupUi(this);
+//    explosion = new QMediaPlayer();
+//    splash = new QMediaPlayer();
+//    explosion->setMedia(QUrl("qrc:/sounds/Explosion.mp3"));
+//    splash->setMedia(QUrl("qrc:/sounds/Splash.mp3"));
 
-    srand(time(0)); // set random seed
+    for(int i=0; i<10; i++)
+    {
+        for(int j=0; j<10; j++)
+        {
+            player1HitorMiss[i][j]=unknown;
+        }
+    }
 
-    initialSize = destroyedShips.size();
-
-    explosion = new QMediaPlayer();
-    splash = new QMediaPlayer();
-    explosion->setMedia(QUrl("qrc:/sounds/Explosion.mp3"));
-    splash->setMedia(QUrl("qrc:/sounds/Splash.mp3"));
-    //light up player1's name
-    //this->show();
+//    for(int i=0; i<10; i++)
+//    {
+//        for(int j=0; j<10; j++)
+//        {
+//            player1Grid[i][j]=empty;
+//            player2Grid[i][j]=empty;
+//        }
+//    }
 }
 
 GameScreen::~GameScreen()
@@ -24,666 +36,186 @@ GameScreen::~GameScreen()
     delete ui;
 }
 
-void GameScreen::paintText(QPainter& painter, int x_coord, int y_coord)
+void GameScreen::paintBoardLabels(QPainter& painter)
 {
-    painter.translate(-3,188);
-
     const QString numbers[10]={"1","2","3","4","5","6","7","8","9","10"};
     const QString letters[10]={"A","B","C","D","E","F","G","H","I","J"};
-
     painter.setPen(Qt::gray);
     painter.setFont(QFont("Times New Roman", 16));
 
-    // player 1's board
-    for(int i = 0; i<10; i++)  // paints Player 1 grid letters
+    //left board labels
+    int x = 0;
+    int y = 200;
+    for(int i = 0; i<10; i++)
     {
-        QRectF text(x_coord, y_coord, 30, 60);
-        painter.drawText(text,Qt::AlignCenter, letters[i]);
-        y_coord+=46;
+        QRectF test(x, y, 30, 50);
+        painter.drawText(test,Qt::AlignCenter,numbers[i]);
+        y+=46;
     }
-    y_coord += 13;
-    x_coord = 23;
-    for(int i = 0; i<10; i++)  // paints Player 1 grid numbers
+    x+=30;
+    for(int i = 0; i<10; i++)
     {
-        QRectF text(x_coord, y_coord, 60, 20);
-        painter.drawText(text,Qt::AlignCenter,numbers[i]);
-        x_coord += 46;
+        QRectF test(x, y, 50, 20);
+        painter.drawText(test,Qt::AlignCenter,letters[i]);
+        x+=46;
     }
-
-    // player 2's board
-    painter.translate(500,0);
-    x_coord = 5;
-    y_coord = 5;
-    for(int i = 0; i<10; i++)  // paints Player 2 grid letters
+    //right board labels
+    x = 500;
+    y = 200;
+    for(int i = 0; i<10; i++)
     {
-        QRectF text(x_coord, y_coord, 30, 60);
-        painter.drawText(text,Qt::AlignCenter, letters[i]);
-        y_coord += 46;
+        QRectF test(x, y, 30, 50);
+        painter.drawText(test,Qt::AlignCenter,numbers[i]);
+        y+=46;
     }
-    y_coord += 13;
-    x_coord = 23;
-    for(int i = 0; i<10; i++)  // paints Player 2 grid numbers
+    x+=30;
+    for(int i = 0; i<10; i++)
     {
-        QRectF text(x_coord, y_coord, 60, 20);
-        painter.drawText(text,Qt::AlignCenter, numbers[i]);
-        x_coord += 46;
+        QRectF test(x, y, 50, 20);
+        painter.drawText(test,Qt::AlignCenter,letters[i]);
+        x+=46;
     }
 }
 
 void GameScreen::checkIfDestroyed()
 {
-    // Player 2
-    if (player2_carrier_hit == 5)
-    {
-        player2_carrier_destroyed = true;
-    }
-    if (player2_battleship_hit  == 4)
-    {
-        player2_battleship_destroyed = true;
-    }
-    if (player2_submarine_hit  == 4)
-    {
-        player2_submarine_destroyed = true;
-    }
-    if (player2_destroyer_hit  == 3)
-    {
-        player2_destroyer_destroyed = true;
-    }
-    if (player2_patrol_hit == 2)
-    {
-        player2_patrol_destroyed = true;
-    }
+    if(player1Ships[carrier]==0) ui->carrierLeft->hide();
+    if(player1Ships[battleship]==0) ui->battleshipLeft->hide();
+    if(player1Ships[submarine]==0) ui->submarineLeft->hide();
+    if(player1Ships[destroyer]==0) ui->destroyerLeft->hide();
+    if(player1Ships[patrol]==0) ui->patrolLeft->hide();
 
-    // Player 1
-    if (player1_carrier_hit == 5)
-    {
-        player1_carrier_destroyed = true;
-        destroyedShips.insert("carrier");
-    }
-    if (player1_battleship_hit  == 4)
-    {
-        player1_battleship_destroyed = true;
-        destroyedShips.insert("battleship");
-    }
-    if (player1_submarine_hit  == 4)
-    {
-        player1_submarine_destroyed = true;
-        destroyedShips.insert("submarine");
-    }
-    if (player1_destroyer_hit  == 3)
-    {
-        player1_destroyer_destroyed = true;
-        destroyedShips.insert("destroyer");
-    }
-    if (player1_patrol_hit == 2)
-    {
-        player1_patrol_destroyed = true;
-        destroyedShips.insert("patrol");
-    }
+    if(player2Ships[carrier]==0) ui->carrierRight->hide();
+    if(player2Ships[battleship]==0) ui->battleshipRight->hide();
+    if(player2Ships[submarine]==0) ui->submarineRight->hide();
+    if(player2Ships[destroyer]==0)ui->destroyerRight->hide();
+    if(player2Ships[patrol]==0) ui->patrolRight->hide();
 
-    // if size increases, reset squares hit and successful second hit and continue direction
-    if (is_computer)
+    bool winPlayer1=true;
+    bool winPlayer2=true;
+    for(int i=0; i<5;i++)
     {
-        // if size of QSet destroyedShips increases, reset computer info
-        if (destroyedShips.size() > initialSize)
-        {
-            squaresHit = 0;
-            successful_second_hit = false;
-            continue_direction = 0;
-            initialSize = destroyedShips.size();
-        }
+        if(player1Ships[i]!=0)
+            winPlayer1=false;
+        if(player2Ships[i]!=0)
+            winPlayer2=false;
     }
+//    if(winPlayer1){playerXWins(1);}
+//    if(winPlayer2){playerXWins(2);}
 }
 
-void GameScreen::updateShips(QPainter& painter, int x_coord, int y_coord)
-{
-    painter.translate(-483, -130);
-    //draw remaining ships for player 1
-    // carrier
-    for (int i = 0; i < 5; ++i)
-    {
-        if (!player1_carrier_destroyed)
-        {
-            painter.setBrush(Qt::black);
-        }
-        else
-        {
-            painter.setBrush(Qt::red);
-        }
-        x_coord = 25*i;
-        QRectF ship(x_coord, y_coord, 25, 25);
-        painter.drawRect(ship);
-    }
-    // battleship
-    painter.translate(0,35);
-    for (int i = 0; i < 4; ++i)
-    {
-        if (!player1_battleship_destroyed)
-        {
-            painter.setBrush(Qt::black);
-        }
-        else
-        {
-            painter.setBrush(Qt::red);
-        }
-        x_coord = 25*i;
-        QRectF ship(x_coord, y_coord, 25, 25);
-        painter.drawRect(ship);
-    }
-    // submarine
-    painter.translate(0, 35);
-    for (int i = 0; i < 4; ++i)
-    {
-        if (!player1_submarine_destroyed)
-        {
-            painter.setBrush(Qt::black);
-        }
-        else
-        {
-            painter.setBrush(Qt::red);
-        }
-        x_coord = 25*i;
-        QRectF ship(x_coord, y_coord, 25, 25);
-        painter.drawRect(ship);
-    }
-    // destroyer
-    painter.translate(140,-70);
-    for (int i = 0; i < 3; ++i)
-    {
-        if (!player1_destroyer_destroyed)
-        {
-            painter.setBrush(Qt::black);
-        }
-        else
-        {
-            painter.setBrush(Qt::red);
-        }
-        x_coord = 25*i;
-        QRectF ship(x_coord, y_coord, 25, 25);
-        painter.drawRect(ship);
-    }
-    // patrol boat
-    painter.translate(0, 35);
-    for (int i = 0; i < 2; ++i)
-    {
-        if (!player1_patrol_destroyed)
-        {
-            painter.setBrush(Qt::black);
-        }
-        else
-        {
-            painter.setBrush(Qt::red);
-        }
-        x_coord = 25*i;
-        QRectF ship(x_coord, y_coord, 25, 25);
-        painter.drawRect(ship);
-    }
-
-    painter.translate(360, -35);
-    //draw remaining ships for player 2
-    // carrier
-    for (int i = 0; i < 5; ++i)
-    {
-        if (!player2_carrier_destroyed)
-        {
-            painter.setBrush(Qt::black);
-        }
-        else
-        {
-            painter.setBrush(Qt::red);
-        }
-        x_coord = 25*i;
-        QRectF ship(x_coord, y_coord, 25, 25);
-        painter.drawRect(ship);
-    }
-    // battleship
-    painter.translate(0, 35);
-    for (int i = 0; i < 4; ++i)
-    {
-        if (!player2_battleship_destroyed)
-        {
-            painter.setBrush(Qt::black);
-        }
-        else
-        {
-            painter.setBrush(Qt::red);
-        }
-        x_coord = 25*i;
-        QRectF ship(x_coord, y_coord, 25, 25);
-        painter.drawRect(ship);
-    }
-    // submarine
-    painter.translate(0, 35);
-    for (int i = 0; i < 4; ++i)
-    {
-        if (!player2_submarine_destroyed)
-        {
-            painter.setBrush(Qt::black);
-        }
-        else
-        {
-            painter.setBrush(Qt::red);
-        }
-        x_coord = 25*i;
-        QRectF ship(x_coord, y_coord, 25, 25);
-        painter.drawRect(ship);
-    }
-    // destroyer
-    painter.translate(140, -70);
-    for (int i = 0; i < 3; ++i)
-    {
-        if (!player2_submarine_destroyed)
-        {
-            painter.setBrush(Qt::black);
-        }
-        else
-        {
-            painter.setBrush(Qt::red);
-        }
-        x_coord = 25*i;
-        QRectF ship(x_coord, y_coord, 25, 25);
-        painter.drawRect(ship);
-    }
-    // patrol boat
-    painter.translate(0, 35);
-    for (int i = 0; i < 2; ++i)
-    {
-        if (!player2_submarine_destroyed)
-        {
-            painter.setBrush(Qt::black);
-        }
-        else
-        {
-            painter.setBrush(Qt::red);
-        }
-        x_coord = 25*i;
-        QRectF ship(x_coord, y_coord, 25, 25);
-        painter.drawRect(ship);
-    }
-}
-
-void GameScreen::paintBoard(QPainter& painter)
-{
-    painter.translate(-120, 107);
-    //painter.translate(500, 0);
-    for (int i = 0; i < 10; ++i)
-    {
-        for (int j = 0; j < 10; ++j)
-        {
-            if (player2HitMiss[i][j] == blank)
-            {
-                continue;
-            }
-            else if (player2HitMiss[i][j] == hit)
-            {
-                painter.setBrush(Qt::red);
-                QRect attack(i*46, j*46, 46, 46);
-                painter.drawRect(attack);
-            }
-            else if (player2HitMiss[i][j] == miss)
-            {
-                painter.setBrush(Qt::blue);
-                QRect miss(i*46, j*46, 46, 46);
-                painter.drawRect(miss);
-            }
-        }
-    }
-    //qDebug() << count;
-    //++count;
-    painter.translate(-500,0);
-    for (int i = 0; i < 10; ++i)
-    {
-        for (int j = 0; j < 10; ++j)
-        {
-            if (player1HitMiss[i][j] == blank)
-            {
-                continue;
-            }
-            else if (player1HitMiss[i][j] == hit)
-            {
-                painter.setBrush(Qt::red);
-                QRect attack(i*46, j*46, 46, 46);
-                painter.drawRect(attack);
-            }
-            else if (player1HitMiss[i][j] == miss)
-            {
-                painter.setBrush(Qt::blue);
-                QRect miss(i*46, j*46, 46, 46);
-                painter.drawRect(miss);
-            }
-        }
-    }
-}
-
-void GameScreen::gameplay(QPainter &painter)
-{
-    painter.translate(500, 0);
-    if (!player1_turn)
-    {
-        // light up player name
-        if (is_computer)  // Computer
-        {
-            if (squaresHit <= 0) // if no Hits
-            {
-                // choose random position on Player 1's grid
-                rand_x_grid_pos = rand() % 10;
-                rand_y_grid_pos = rand() % 10;
-                origin_x = rand_x_grid_pos;
-                origin_y = rand_y_grid_pos;
-            }
-            else if (squaresHit > 0 && successful_second_hit == false) // if one hit
-            {
-                rand_x_grid_pos = origin_x;
-                rand_y_grid_pos = origin_y;
-
-                rand_direction = 1 + rand() % 4; // choose random directions (1-4) from the hit square
-                switch(rand_direction)
-                {
-                    case 1: // up
-                        if (rand_y_grid_pos != 0)
-                        {
-                            --rand_y_grid_pos;
-                        }
-                        break;
-                    case 2: // right
-                        if (rand_x_grid_pos != 9)
-                        {
-                            ++rand_x_grid_pos;
-                        }
-                        break;
-                    case 3: // down
-                        if (rand_y_grid_pos != 9)
-                        {
-                            ++rand_y_grid_pos;
-                        }
-                        break;
-                    case 4: // left
-                        if (rand_x_grid_pos != 0)
-                        {
-                            --rand_x_grid_pos;
-                        }
-                        break;
-                }
-            }
-            else if (squaresHit > 0 && successful_second_hit == true)  // if two or more hits
-            {
-                switch(continue_direction) // continue in the direction where the second hit was found
-                {
-                    case 1: // up
-                        if (rand_y_grid_pos != 0)
-                        {
-                            --rand_y_grid_pos;
-                        }
-                        break;
-                    case 2: // right
-                        if (rand_x_grid_pos != 9)
-                        {
-                            ++rand_x_grid_pos;
-                        }
-                        break;
-                    case 3: // down
-                        if (rand_y_grid_pos != 9)
-                        {
-                            ++rand_y_grid_pos;
-                        }
-                        break;
-                    case 4: // left
-                        if (rand_x_grid_pos != 0)
-                        {
-                            --rand_x_grid_pos;
-                        }
-                        break;
-                }
-            }
-
-            if (player1Grid[rand_x_grid_pos][rand_y_grid_pos] != empty) // if there is a ship
-            {
-                if (player1HitMiss[rand_x_grid_pos][rand_y_grid_pos] == blank) // if coordinate has not been hit
-                {
-                    ++squaresHit;
-                    if (squaresHit > 1 && successful_second_hit == false)  // hit second square
-                    {
-                        successful_second_hit = true;
-                        continue_direction = rand_direction;  // continue with the current direction
-                    }
-                    player1HitMiss[rand_x_grid_pos][rand_y_grid_pos] = hit;
-                    updateHits(player1Grid[rand_x_grid_pos][rand_y_grid_pos]); // update ships destroyed counter
-                    QTimer::singleShot(0, this, SLOT(soundUpdate())); // delay before next attack
-                }
-                else // if chosen coordinate has already been hit
-                {
-                    update();
-                }
-            }
-            else // if there is no ship
-            {
-                if (player1HitMiss[rand_x_grid_pos][rand_y_grid_pos] == blank) // if coordinate has not been missed
-                {
-                    if (squaresHit > 1) // if ship has not been destroyed completely
-                    {
-                        switch(continue_direction)  // continue in other direction
-                        {
-                            case 1:
-                                continue_direction = 3;
-                                break;
-                            case 2:
-                                continue_direction = 4;
-                                break;
-                            case 3:
-                                continue_direction = 1;
-                                break;
-                            case 4:
-                                continue_direction = 1;
-                                break;
-                        }
-                    }
-                    player1HitMiss[rand_x_grid_pos][rand_y_grid_pos] = miss;
-                    // turn off name
-                    player1_turn = true; // Player 1's turn
-                    QTimer::singleShot(0, this, SLOT(soundUpdate())); // delay before miss
-                }
-                else  // if chosen coordinate has already been missed
-                {
-                    update();
-                }
-            }
-        }
-        else // Player 2
-        {
-            if (click_x >= 32 && click_x <= 492 && click_y >= 200 && click_y <= 660) // Clicked coordinate is in correct area
-            {
-                // calculate correct grid position from mouse click
-                int x_grid_pos = (click_x - 32) /46;
-                int y_grid_pos = (click_y - 200) / 46;
-
-                if (player1Grid[x_grid_pos][y_grid_pos] != empty) // if there is a ship
-                {
-                    if (player1HitMiss[x_grid_pos][y_grid_pos] == blank) // if coordinate has not been hit
-                    {
-                        player1HitMiss[x_grid_pos][y_grid_pos] = hit;
-                        updateHits(player1Grid[x_grid_pos][y_grid_pos]); // update ships destroyed counter
-                        explosion->play();
-                        update();
-                    }
-                }
-                else
-                {
-                    if (player1HitMiss[x_grid_pos][y_grid_pos] == blank)
-                    {
-                        player1HitMiss[x_grid_pos][y_grid_pos] = miss;
-                        splash->play();
-                        // turn off name
-                        player1_turn = true;
-                        update();
-                    }
-                }
-            }
-        }
-    }
-
-    painter.translate(-500, 0);
-    if (player1_turn)
-    {
-        // light up player name
-        if (click_x >= 532 && click_x <= 992 && click_y >= 200 && click_y <= 660)
-        {
-            int x_grid_pos = (click_x - 532) /46;
-            int y_grid_pos = (click_y - 200) / 46;
-
-            if (player2Grid[x_grid_pos][y_grid_pos] != empty)
-            {
-                if (player2HitMiss[x_grid_pos][y_grid_pos] == blank)
-                {
-                    player2HitMiss[x_grid_pos][y_grid_pos] = hit;
-                    updateHits(player2Grid[x_grid_pos][y_grid_pos]);
-                    explosion->play();
-                    update();
-                }
-            }
-            else
-            {
-                if (player2HitMiss[x_grid_pos][y_grid_pos] == blank)
-                {
-                    player2HitMiss[x_grid_pos][y_grid_pos] = miss;
-                    splash->play();
-                    // turn off name
-                    player1_turn = false;
-                    update();
-                }
-            }
-        }
-    }
-}
-
-void GameScreen::updateHits(ShipType hit_ship)
-{
-    if (player1_turn) // Player 1's turn
-    {
-        switch(hit_ship)
-        {
-        case empty:
-            break;
-        case carrier:
-            ++player2_carrier_hit;
-            break;
-        case battleship:
-            ++player2_battleship_hit;
-            break;
-        case submarine:
-            ++player2_submarine_hit;
-            break;
-        case destroyer:
-            ++player2_destroyer_hit;
-            break;
-        case patrol:
-            ++player2_patrol_hit;
-            break;
-        }
-    }
-    if (!player1_turn) // Player 2's turn
-    {
-        switch(hit_ship)
-        {
-        case empty:
-            break;
-        case carrier:
-            ++player1_carrier_hit;
-            break;
-        case battleship:
-            ++player1_battleship_hit;
-            break;
-        case submarine:
-            ++player1_submarine_hit;
-            break;
-        case destroyer:
-            ++player1_destroyer_hit;
-            break;
-        case patrol:
-            ++player1_patrol_hit;
-            break;
-        }
-    }
-}
+void GameScreen::updateShips(QPainter& painter, int x_coord, int y_coord){}
 
 void GameScreen::paintEvent(QPaintEvent* event)
 {
     QPainter painter(this);
-   // qDebug() <<count;
-   // ++count;
-    int x_coord = 5;
-    int y_coord = 5;
-    paintText(painter, x_coord, y_coord); // paint grid text
-    checkIfDestroyed();
-    x_coord = 0;
-    y_coord = 0;
-    updateShips(painter, x_coord, y_coord); // paint remaining ships
 
-    paintBoard(painter);
-    gameplay(painter);
+    //board labels
+    paintBoardLabels(painter);
 
+    //current player turn
+    if(currentPlayer==1)
+    {
+        ui->lbl_FingerLeft->show();
+        ui->lbl_FingerRight->hide();
+    }
+    else {
+        ui->lbl_FingerLeft->hide();
+        ui->lbl_FingerRight->show();
+    }
+
+    for(int i =0; i<10; i++)
+    {
+        for(int j=0; j<10; j++)
+        {
+            if(player1Grid[i][j]!=empty)
+            {
+                painter.setBrush(Qt::darkGray);
+                QRectF test((i*46)+33, (j*46)+200, 46, 46); // box height & width = 60
+                painter.drawRect(test);
+            }
+        }
+    }
 }
-
-//void GameScreen::checkIfWinner()
-//{
-//    if (all of playerones ships are destroyed)
-//    {
-//        playertwo is winner;
-//        repaint (show Player two wins);
-//    }
-//    else if (all of playertwos ships are destroyed)
-//    {
-//        playerone is winner;
-//        repaint (show Player one wins);
-//    }
-//}
 
 void GameScreen::mousePressEvent(QMouseEvent* event)
 {
     click_x = event->x();
     click_y = event->y();
-//    const QPointF point = event->windowPos();
-//    qDebug() << point;
 
-    if (is_computer)
-    {
-        if (!player1_turn)
-        {
-        }
-        else {
-            update();
-        }
-    }
-    else
-    {
-        update();
-    }
-}
+//    ui->lcd_left->display(x_grid_pos);
+//    ui->lcd_right->display(y_grid_pos);
 
-void GameScreen::soundUpdate()
-{
-    if (!player1_turn)
+    if(currentPlayer==1)
     {
-        explosion->play();
+//        if(click_x>500 || click_y<200) return;
+//        int x_grid_pos = (click_x - 32) /46;
+//        int y_grid_pos = (click_y - 200) / 46;
+
+//        if(player1HitorMiss[x_grid_pos][y_grid_pos]!=unknown) return;
+
+//        else {
+//            if(player1Grid[x_grid_pos][y_grid_pos]==empty)
+//            {
+//                player1HitorMiss[x_grid_pos][y_grid_pos]=miss;
+//            }
+//            else {
+//                player1Ships[player1Grid[x_grid_pos][y_grid_pos]]--;
+//                player1Grid[x_grid_pos][y_grid_pos]=empty;
+//                player1HitorMiss[x_grid_pos][y_grid_pos] = hit;
+//                checkIfDestroyed();
+//            }
+//        }
+        currentPlayer=2;
     }
-    else
+    else //if (currentPlayer==2)
     {
-        splash->play();
+        if(click_x<500 || click_y<200) return;
+        int x_grid_pos = (click_x - 534) /46;
+        int y_grid_pos = (click_y - 202) / 46;
+
+
+//        if(player2HitorMiss[x_grid_pos][y_grid_pos]!=unknown) return;
+
+//        else {
+//            if(player2Grid[x_grid_pos][y_grid_pos]==empty)
+//            {
+//                player2HitorMiss[x_grid_pos][y_grid_pos]=miss;
+//            }
+//            else {
+//                player2Ships[player2Grid[x_grid_pos][y_grid_pos]]--;
+//                player2Grid[x_grid_pos][y_grid_pos]=empty;
+//                player2HitorMiss[x_grid_pos][y_grid_pos] = hit;
+//                checkIfDestroyed();
+//            }
+//        }
+        currentPlayer=1;
     }
     update();
 }
 
-void GameScreen::setBoard(int playerx, ShipType arr[10][10])
+
+void GameScreen::setGrid(int player, ShipType arr[10][10])
 {
-    if(playerx==1)
+    if(player==1)
     {
         for(int i =0; i<10; i++) {
             for(int j =0; j<10; j++)
                 player1Grid[i][j] = arr[i][j];}
+
+        for(int i=0; i<10; i++)
+        {
+            for(int j=0; j<10; j++)
+            {
+                qDebug()<<arr[i][j]<<" ";
+            }
+            qDebug()<<endl;
+        }
     }
-    else if(playerx==2){
+    else //if(player==2)
+    {
         for(int i =0; i<10; i++) {
             for(int j =0; j<10; j++)
                 player2Grid[i][j] = arr[i][j];}
     }
 }
-

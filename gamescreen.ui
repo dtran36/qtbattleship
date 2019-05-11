@@ -13,7 +13,7 @@
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
-  <widget class="QFrame" name="shipsLeft">
+  <widget class="QFrame" name="Scoreboard">
    <property name="geometry">
     <rect>
      <x>0</x>
@@ -28,7 +28,7 @@
    <property name="frameShadow">
     <enum>QFrame::Raised</enum>
    </property>
-   <widget class="QFrame" name="ShipsPlayer1">
+   <widget class="QFrame" name="playerLeft">
     <property name="geometry">
      <rect>
       <x>0</x>
@@ -43,13 +43,13 @@
     <property name="frameShadow">
      <enum>QFrame::Raised</enum>
     </property>
-    <widget class="QLabel" name="label">
+    <widget class="QLabel" name="lbl_Player1">
      <property name="geometry">
       <rect>
        <x>0</x>
        <y>0</y>
        <width>300</width>
-       <height>50</height>
+       <height>60</height>
       </rect>
      </property>
      <property name="text">
@@ -62,8 +62,77 @@
       <bool>true</bool>
      </property>
     </widget>
+    <widget class="QLabel" name="lbl_FingerLeft">
+     <property name="geometry">
+      <rect>
+       <x>300</x>
+       <y>0</y>
+       <width>200</width>
+       <height>125</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="pixmap">
+      <pixmap resource="qtbattleship_resources.qrc">:/images/FingerLeft.png</pixmap>
+     </property>
+     <property name="scaledContents">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QWidget" name="horizontalLayoutWidget">
+     <property name="geometry">
+      <rect>
+       <x>-1</x>
+       <y>59</y>
+       <width>501</width>
+       <height>101</height>
+      </rect>
+     </property>
+     <layout class="QHBoxLayout" name="playerLayoutLeft">
+      <item>
+       <widget class="QLabel" name="carrierLeft">
+        <property name="text">
+         <string>carrierLeft</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="battleshipLeft">
+        <property name="text">
+         <string>battleshipLeft</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="submarineLeft">
+        <property name="text">
+         <string>submarineLeft</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="destroyerLeft">
+        <property name="text">
+         <string>destroyerLeft</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="patrolLeft">
+        <property name="text">
+         <string>patrolLeft</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLCDNumber" name="lcd_left"/>
+      </item>
+     </layout>
+    </widget>
    </widget>
-   <widget class="QFrame" name="ShipsPlayer2">
+   <widget class="QFrame" name="playerRight">
     <property name="geometry">
      <rect>
       <x>500</x>
@@ -78,13 +147,13 @@
     <property name="frameShadow">
      <enum>QFrame::Raised</enum>
     </property>
-    <widget class="QLabel" name="label_2">
+    <widget class="QLabel" name="lbl_Player2">
      <property name="geometry">
       <rect>
-       <x>0</x>
+       <x>200</x>
        <y>0</y>
        <width>300</width>
-       <height>50</height>
+       <height>60</height>
       </rect>
      </property>
      <property name="text">
@@ -97,9 +166,78 @@
       <bool>true</bool>
      </property>
     </widget>
+    <widget class="QLabel" name="lbl_FingerRight">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>200</width>
+       <height>125</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="pixmap">
+      <pixmap resource="qtbattleship_resources.qrc">:/images/FingerRight.png</pixmap>
+     </property>
+     <property name="scaledContents">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QWidget" name="horizontalLayoutWidget_2">
+     <property name="geometry">
+      <rect>
+       <x>-1</x>
+       <y>59</y>
+       <width>524</width>
+       <height>101</height>
+      </rect>
+     </property>
+     <layout class="QHBoxLayout" name="playerLayoutRight">
+      <item>
+       <widget class="QLCDNumber" name="lcd_right"/>
+      </item>
+      <item>
+       <widget class="QLabel" name="patrolRight">
+        <property name="text">
+         <string>patrolRight</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="destroyerRight">
+        <property name="text">
+         <string>destroyerRight</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="submarineRight">
+        <property name="text">
+         <string>submarineRight</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="battleshipRight">
+        <property name="text">
+         <string>battleshipRight</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="carrierRight">
+        <property name="text">
+         <string>carrierRight</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
    </widget>
   </widget>
-  <widget class="QFrame" name="frame_2">
+  <widget class="QFrame" name="gridLeft">
    <property name="geometry">
     <rect>
      <x>0</x>
@@ -114,7 +252,7 @@
    <property name="frameShadow">
     <enum>QFrame::Raised</enum>
    </property>
-   <widget class="Line" name="line">
+   <widget class="Line" name="line1">
     <property name="geometry">
      <rect>
       <x>7</x>
@@ -127,7 +265,7 @@
      <enum>Qt::Horizontal</enum>
     </property>
    </widget>
-   <widget class="Line" name="line_2">
+   <widget class="Line" name="line2">
     <property name="geometry">
      <rect>
       <x>7</x>
@@ -140,7 +278,7 @@
      <enum>Qt::Horizontal</enum>
     </property>
    </widget>
-   <widget class="Line" name="line_3">
+   <widget class="Line" name="line3">
     <property name="geometry">
      <rect>
       <x>7</x>
@@ -153,7 +291,7 @@
      <enum>Qt::Horizontal</enum>
     </property>
    </widget>
-   <widget class="Line" name="line_4">
+   <widget class="Line" name="line4">
     <property name="geometry">
      <rect>
       <x>7</x>
@@ -166,7 +304,7 @@
      <enum>Qt::Horizontal</enum>
     </property>
    </widget>
-   <widget class="Line" name="line_5">
+   <widget class="Line" name="line5">
     <property name="geometry">
      <rect>
       <x>7</x>
@@ -179,7 +317,7 @@
      <enum>Qt::Horizontal</enum>
     </property>
    </widget>
-   <widget class="Line" name="line_6">
+   <widget class="Line" name="line6">
     <property name="geometry">
      <rect>
       <x>7</x>
@@ -192,7 +330,7 @@
      <enum>Qt::Horizontal</enum>
     </property>
    </widget>
-   <widget class="Line" name="line_7">
+   <widget class="Line" name="line7">
     <property name="geometry">
      <rect>
       <x>7</x>
@@ -205,7 +343,7 @@
      <enum>Qt::Horizontal</enum>
     </property>
    </widget>
-   <widget class="Line" name="line_8">
+   <widget class="Line" name="line8">
     <property name="geometry">
      <rect>
       <x>7</x>
@@ -218,7 +356,7 @@
      <enum>Qt::Horizontal</enum>
     </property>
    </widget>
-   <widget class="Line" name="line_9">
+   <widget class="Line" name="line9">
     <property name="geometry">
      <rect>
       <x>7</x>
@@ -401,7 +539,7 @@
     </property>
    </widget>
   </widget>
-  <widget class="QFrame" name="frame_3">
+  <widget class="QFrame" name="gridRight">
    <property name="geometry">
     <rect>
      <x>500</x>
@@ -703,6 +841,9 @@
     </property>
    </widget>
   </widget>
+  <zorder>gridRight</zorder>
+  <zorder>Scoreboard</zorder>
+  <zorder>gridLeft</zorder>
  </widget>
  <resources>
   <include location="qtbattleship_resources.qrc"/>

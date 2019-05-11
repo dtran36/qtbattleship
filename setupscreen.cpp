@@ -1,6 +1,8 @@
 #include "setupscreen.h"
 #include "ui_setupscreen.h"
 
+#include<QDebug>
+
 SetupScreen::SetupScreen(int x,QWidget *parent) :
     QFrame(parent),
     ui(new Ui::SetupScreen),
@@ -114,7 +116,7 @@ void SetupScreen::paintEvent(QPaintEvent* event)
     QPainter painter(this); // create painter object
     painter.translate(340,0); //move painter position to top left of grid
     int x = 0;
-    int y = 5;
+    int y = 0;
     const QString arr[10]={"10","9","8","7","6","5","4","3","2","1"};
     const QString arr2[10]={"A","B","C","D","E","F","G","H","I","J"};
     painter.setPen(Qt::gray);
@@ -123,8 +125,8 @@ void SetupScreen::paintEvent(QPaintEvent* event)
     //paint numbers
     for(int i = 0; i<10; i++)
     {
-        QRectF test(x, y, 30, 60);
-        painter.drawText(test,Qt::AlignCenter,arr[i]);
+        QRectF rectNumber(x, y, 30, 60);
+        painter.drawText(rectNumber,Qt::AlignCenter,arr[i]);
         y+=60;
     }
     x=30;
@@ -132,8 +134,8 @@ void SetupScreen::paintEvent(QPaintEvent* event)
     //paint letters
     for(int i = 0; i<10; i++)
     {
-        QRectF test(x, y, 60, 20);
-        painter.drawText(test,Qt::AlignCenter,arr2[i]);
+        QRectF rectLetter(x, y, 60, 30);
+        painter.drawText(rectLetter,Qt::AlignCenter,arr2[i]);
         x+=60;
     }
 
@@ -302,6 +304,13 @@ void SetupScreen::confirmPlacement()
     //checks if all ships are placed after every confirm
     if (checkSetupDone())
     {
+        for(int i=0; i<10; i++)
+        {
+            for(int j=0; j<10; j++)
+            {
+                qDebug()<<grid[i][j];
+            }
+        }
         emit moveNext(player,grid);
     }
 }
@@ -313,14 +322,6 @@ void SetupScreen::cancelPlacement()
     repaint();
     curButton->show(); // reshow current ship button
     focusShipButtons();
-}
-
-void SetupScreen::getGrid(ShipType arr[10][10])
-{
-    for(int i =0; i<10; i++) {
-        for(int j =0; j<10; j++)
-            arr[i][j] = grid[i][j];
-    }
 }
 
 SetupScreen::~SetupScreen()

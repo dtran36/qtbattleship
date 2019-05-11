@@ -25,7 +25,6 @@ public:
     explicit SetupScreen(int x=1,QWidget *parent = nullptr);
     ~SetupScreen();
 
-    void getGrid (ShipType arr[10][10]);
 
 signals:
     /**

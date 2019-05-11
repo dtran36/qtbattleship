@@ -8,6 +8,8 @@
         <file>quit.png</file>
         <file>Player1.png</file>
         <file>Player2.png</file>
+        <file>FingerLeft.png</file>
+        <file>FingerRight.png</file>
     </qresource>
     <qresource prefix="/sounds">
         <file>Splash.mp3</file>
