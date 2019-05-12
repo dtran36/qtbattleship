@@ -12,6 +12,7 @@ GameScreen::GameScreen(QWidget *parent) :
     splash->setSource(QUrl("qrc:/sounds/Splash.wav"));
     splash->setVolume(.6);
 
+    //initialize hit or miss grids
     for(int i=0; i<10; i++)
     {
         for(int j=0; j<10; j++)
@@ -25,9 +26,9 @@ GameScreen::GameScreen(QWidget *parent) :
 void GameScreen::setGrid(int player, const matrix& b)
 {
     if(player==1)
-        b.get_data(player1Grid);
-    else //if(player==2)
         b.get_data(player2Grid);
+    else //if(player==2)
+        b.get_data(player1Grid);
 }
 
 void GameScreen::paintEvent(QPaintEvent* event)
@@ -149,8 +150,33 @@ void GameScreen::mousePressEvent(QMouseEvent* event)
             player1HitorMiss[x_grid_pos][y_grid_pos]=hit;
             checkIfDestroyed();
         }
+        update();
 
-        currentPlayer=2;
+        if (versus)
+        {
+            currentPlayer=2;
+        }
+        else {
+            int x_grid_pos = rand() % 10;
+            int y_grid_pos = rand() % 10;
+
+            if(player2HitorMiss[x_grid_pos][y_grid_pos]!=unknown) return;
+
+            if(player2Grid[x_grid_pos][y_grid_pos]==empty)
+            {
+                splash->play();
+                player2HitorMiss[x_grid_pos][y_grid_pos]=miss;
+            }
+            else {
+                explosion->play();
+                player2Ships[player2Grid[x_grid_pos][y_grid_pos]]--;
+                player2Grid[x_grid_pos][y_grid_pos]=empty;
+                player2HitorMiss[x_grid_pos][y_grid_pos]=hit;
+                checkIfDestroyed();
+            }
+            currentPlayer=1;
+            update();
+        }
     }
     else //if (currentPlayer==2)
     {
@@ -173,8 +199,8 @@ void GameScreen::mousePressEvent(QMouseEvent* event)
             checkIfDestroyed();
         }
         currentPlayer=1;
+        update();
     }
-    update();
 }
 
 void GameScreen::checkIfDestroyed()
@@ -213,6 +239,11 @@ void GameScreen::playerXWins(const int x)
     else {
         ui->lbl_Player1->hide();
     }
+}
+
+void GameScreen::setVersus()
+{
+    versus = true;
 }
 
 GameScreen::~GameScreen()

@@ -37,6 +37,8 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(singleplayerSetup,SIGNAL(moveNext(int,const matrix&)),game,SLOT(setGrid(int,const matrix&)));
     connect(versusSetup1,SIGNAL(moveNext(int,const matrix&)),game,SLOT(setGrid(int,const matrix&)));
     connect(versusSetup2,SIGNAL(moveNext(int,const matrix&)),game,SLOT(setGrid(int,const matrix&)));
+    //set mode to versus
+    connect(versusSetup2,SIGNAL(moveNext(int,const matrix&)),game,SLOT(setVersus()));
 
     //connect npc
     connect(singleplayerSetup,SIGNAL(moveNext(int,const matrix&)),bot,SLOT(getnpc()));

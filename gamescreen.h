@@ -40,6 +40,8 @@ public:
 public slots:
     void setGrid(int player, const matrix& b);
 
+    void setVersus();
+
 private slots:
     void playerXWins(const int x);
 
@@ -58,6 +60,8 @@ private:
 
     int player1Ships[6]={0,5,4,3,3,2};
     int player2Ships[6]={0,5,4,3,3,2};
+
+    bool versus = false;
 
     int currentPlayer = 1;
     QSoundEffect* explosion;
