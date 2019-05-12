@@ -3,11 +3,11 @@
 
 #include <QMainWindow>
 #include <QStackedWidget>
-#include"mainmenu.h"
-#include"setupscreen.h"
-#include"gamescreen.h"
-
-#include"matrix.h"
+#include "mainmenu.h"
+#include "setupscreen.h"
+#include "gamescreen.h"
+#include "matrix.h"
+#include "npc.h"
 
 namespace Ui {
 class MainWindow;
@@ -50,12 +50,12 @@ private:
     Ui::MainWindow *ui;
 
     QStackedWidget *stackedWidget = nullptr;
-
     QFrame *firstscreen = nullptr;
     QFrame *singleplayerSetup = nullptr;
     QFrame *versusSetup1 = nullptr;
     QFrame *versusSetup2 = nullptr;
     QFrame *game = nullptr;
+    npc* bot = nullptr;
 };
 
 #endif // MAINWINDOW_H

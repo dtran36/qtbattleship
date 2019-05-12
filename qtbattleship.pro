@@ -30,6 +30,7 @@ SOURCES += \
         mainmenu.cpp \
         mainwindow.cpp \
         matrix.cpp \
+        npc.cpp \
         setupscreen.cpp \
         ship.cpp
 
@@ -38,6 +39,7 @@ HEADERS += \
         mainmenu.h \
         mainwindow.h \
         matrix.h \
+        npc.h \
         setupscreen.h \
         ship.h
 

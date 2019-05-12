@@ -13,6 +13,7 @@ MainWindow::MainWindow(QWidget *parent) :
     versusSetup1 = new SetupScreen;
     versusSetup2 = new SetupScreen(2);
     game = new GameScreen;
+    bot = new npc;
 
     //add screens to stacked widget
     stackedWidget = new QStackedWidget;
@@ -37,6 +38,10 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(versusSetup1,SIGNAL(moveNext(int,const matrix&)),game,SLOT(setGrid(int,const matrix&)));
     connect(versusSetup2,SIGNAL(moveNext(int,const matrix&)),game,SLOT(setGrid(int,const matrix&)));
 
+    //connect npc
+    connect(singleplayerSetup,SIGNAL(moveNext(int,const matrix&)),bot,SLOT(getnpc()));
+    connect(bot,SIGNAL(getdata(int,const matrix&)),game,SLOT(setGrid(int,const matrix&)));
+
     setCentralWidget(stackedWidget);
 }
 
@@ -48,5 +53,6 @@ void MainWindow::switchGameScreen(){stackedWidget->setCurrentIndex(4);}
 
 MainWindow::~MainWindow()
 {
+    //deleting pointers causes crash
     delete ui;
 }

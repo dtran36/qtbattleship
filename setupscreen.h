@@ -21,7 +21,7 @@ class SetupScreen : public QFrame
 public:
     /**
      * @brief SetupScreen Constructs hidden QDialog window.
-     * @param x which player(1,2) to set QPixmap image
+     * @param x player 1,2 to set QPixmap image
      * @param parent
      */
     explicit SetupScreen(int x=1,QWidget *parent = nullptr);
@@ -123,8 +123,8 @@ private:
 
     bool currentFocusShips = true; //!<true if currently focusing ships
 
-    int player;
-    matrix *test = nullptr;
+    const int player; //!<player 1 or 2
+    matrix *data = nullptr; //!<data to transfer
 };
 
 #endif // SETUPSCREEN_H

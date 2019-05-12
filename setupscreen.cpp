@@ -302,8 +302,8 @@ void SetupScreen::confirmPlacement()
     //checks if all ships are placed after every confirm
     if (checkSetupDone())
     {
-       test = new matrix(grid);
-       emit moveNext(player,*test);
+       data = new matrix(grid);
+       emit moveNext(player,*data);
     }
 }
 
@@ -319,4 +319,7 @@ void SetupScreen::cancelPlacement()
 SetupScreen::~SetupScreen()
 {
     delete ui;
+    delete data;
+    delete curButton;
+    delete curShip;
 }
