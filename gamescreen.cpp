@@ -6,10 +6,10 @@ GameScreen::GameScreen(QWidget *parent) :
     ui(new Ui::GameScreen)
 {
     ui->setupUi(this);
-//    explosion = new QMediaPlayer();
-//    splash = new QMediaPlayer();
-//    explosion->setMedia(QUrl("qrc:/sounds/Explosion.mp3"));
-//    splash->setMedia(QUrl("qrc:/sounds/Splash.mp3"));
+    explosion = new QSoundEffect(this);
+    splash = new QSoundEffect(this);
+    explosion->setSource(QUrl("qrc:/sounds/Explosion.wav"));
+    splash->setSource(QUrl("qrc:/sounds/Splash.wav"));
 
     for(int i=0; i<10; i++)
     {
@@ -130,7 +130,7 @@ void GameScreen::mousePressEvent(QMouseEvent* event)
 
     if(currentPlayer==1)
     {
-        if(click_x>500 || click_y<200) return;
+        if(click_x>500 || click_x<35 ||click_y<200 || click_y>660) return;
         int x_grid_pos = (click_x - 32) /46;
         int y_grid_pos = (click_y - 200) / 46;
 
@@ -138,9 +138,11 @@ void GameScreen::mousePressEvent(QMouseEvent* event)
 
         if(player1Grid[x_grid_pos][y_grid_pos]==empty)
         {
+            splash->play();
             player1HitorMiss[x_grid_pos][y_grid_pos]=miss;
         }
         else {
+            explosion->play();
             player1Ships[player1Grid[x_grid_pos][y_grid_pos]]--;
             player1Grid[x_grid_pos][y_grid_pos]=empty;
             player1HitorMiss[x_grid_pos][y_grid_pos]=hit;
@@ -151,7 +153,7 @@ void GameScreen::mousePressEvent(QMouseEvent* event)
     }
     else //if (currentPlayer==2)
     {
-        if(click_y<200) return;
+        if(click_x<535 ||click_y<200 || click_y>660) return;
         int x_grid_pos = (click_x - 534) /46;
         int y_grid_pos = (click_y - 202) / 46;
 
@@ -159,18 +161,18 @@ void GameScreen::mousePressEvent(QMouseEvent* event)
 
         if(player2Grid[x_grid_pos][y_grid_pos]==empty)
         {
+            splash->play();
             player2HitorMiss[x_grid_pos][y_grid_pos]=miss;
         }
         else {
+            explosion->play();
             player2Ships[player2Grid[x_grid_pos][y_grid_pos]]--;
             player2Grid[x_grid_pos][y_grid_pos]=empty;
             player2HitorMiss[x_grid_pos][y_grid_pos]=hit;
             checkIfDestroyed();
         }
-
         currentPlayer=1;
     }
-
     update();
 }
 

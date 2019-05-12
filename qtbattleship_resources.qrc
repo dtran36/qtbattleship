@@ -14,7 +14,7 @@
         <file>player2wins.png</file>
     </qresource>
     <qresource prefix="/sounds">
-        <file>Splash.mp3</file>
-        <file>Explosion.mp3</file>
+        <file>Splash.wav</file>
+        <file>Explosion.wav</file>
     </qresource>
 </RCC>

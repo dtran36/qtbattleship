@@ -6,6 +6,9 @@
 #include <QFrame>
 #include <QPainter>
 #include <QMouseEvent>
+#include <QMediaPlayer>
+
+#include <QSoundEffect>
 
 enum HitorMiss{unknown, hit, miss};
 
@@ -57,6 +60,8 @@ private:
     int player2Ships[6]={0,5,4,3,3,2};
 
     int currentPlayer = 1;
+    QSoundEffect* explosion;
+    QSoundEffect* splash;
 };
 
 #endif // GAMESCREEN_H
