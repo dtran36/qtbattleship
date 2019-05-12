@@ -10,6 +10,7 @@ GameScreen::GameScreen(QWidget *parent) :
     splash = new QSoundEffect(this);
     explosion->setSource(QUrl("qrc:/sounds/Explosion.wav"));
     splash->setSource(QUrl("qrc:/sounds/Splash.wav"));
+    splash->setVolume(.6);
 
     for(int i=0; i<10; i++)
     {

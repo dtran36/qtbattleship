@@ -12,6 +12,7 @@
         <file>FingerRight.png</file>
         <file>player1wins.png</file>
         <file>player2wins.png</file>
+        <file>background.jpg</file>
     </qresource>
     <qresource prefix="/sounds">
         <file>Splash.wav</file>

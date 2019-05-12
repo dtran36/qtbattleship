@@ -10,6 +10,11 @@ MainMenu::MainMenu(QWidget *parent) :
     auto layout = new QHBoxLayout(this);
     auto frame = new QFrame(this);
 
+    QPixmap bkgnd(":/images/background.jpg");
+    bkgnd = bkgnd.scaled(this->size(),Qt::IgnoreAspectRatio);
+    QPalette palette;palette.setBrush(QPalette::Background,bkgnd);
+    this->setPalette(palette);
+
     frame->setLayout(layout);
     frame->setFixedSize(QSize(1000,690));
     frame->move(-14,0);

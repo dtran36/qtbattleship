@@ -2,6 +2,7 @@
 #define MAINMENU_H
 
 #include <QFrame>
+#include <QPixmap>
 
 namespace Ui {
 class MainMenu;
