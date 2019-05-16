@@ -7,8 +7,11 @@
 #include<QKeyEvent>
 #include<QPushButton>
 #include"ship.h"
-
 #include"matrix.h"
+
+#include <QGraphicsOpacityEffect>
+#include <QPropertyAnimation>
+#include <QEasingCurve>
 
 namespace Ui {
 class SetupScreen;
@@ -105,6 +108,7 @@ private:
      */
     bool tryMove(Ship *newPiece, int newX, int newY);
 
+    void displayWarning();
 
     QPushButton* curButton;//!< the current Ship button pressed, pressing cancel reshows this button
 
@@ -116,7 +120,6 @@ private:
      * @brief focusBoard Disables ship buttons, when ship is selected
      */
     void focusBoard();
-
 
     bool checkShips [6]={true,false,false,false,false,false}; //!<element true if ShipType is placed
     bool checkSetupDone();

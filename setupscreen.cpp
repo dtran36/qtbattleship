@@ -41,6 +41,8 @@ SetupScreen::SetupScreen(int x,QWidget *parent) :
     //make sure user can't press confirm, cancel before selecting first ship
     ui-> pushButton -> setEnabled(false);
     ui-> pushButton_2 -> setEnabled(false);
+
+    ui->Warning->hide();
 }
 
 void SetupScreen::on_pushCarrier_clicked()
@@ -58,6 +60,9 @@ void SetupScreen::on_pushCarrier_clicked()
     //shows the curShip
     repaint();
 
+    //sets position of warning to current ship
+    ui->Warning->setGeometry(75,143,200,40);
+
     //make sure user can't press ship buttons while curShip is not empty
     focusBoard();
 }
@@ -70,6 +75,7 @@ void SetupScreen::on_pushBattleship_clicked()
     curShip = new Ship(battleship);
     repaint();
     focusBoard();
+    ui->Warning->setGeometry(75,264,200,40);
 }
 
 void SetupScreen::on_pushSubmarine_clicked()
@@ -80,6 +86,7 @@ void SetupScreen::on_pushSubmarine_clicked()
     curShip = new Ship(submarine);
     repaint();
     focusBoard();
+    ui->Warning->setGeometry(75,383,200,40);
 }
 
 void SetupScreen::on_pushDestroyer_clicked()
@@ -90,6 +97,7 @@ void SetupScreen::on_pushDestroyer_clicked()
     curShip = new Ship(destroyer);
     repaint();
     focusBoard();
+    ui->Warning->setGeometry(75,502,200,40);
 }
 
 void SetupScreen::on_pushPatrol_clicked()
@@ -100,6 +108,7 @@ void SetupScreen::on_pushPatrol_clicked()
     curShip = new Ship(patrol);
     repaint();
     focusBoard();
+    ui->Warning->setGeometry(75,621,200,40);
 }
 
 void SetupScreen::on_pushButton_clicked() //user clicks "confirm"
@@ -184,7 +193,12 @@ void SetupScreen::keyPressEvent(QKeyEvent *event)
             break;
         case Qt::Key_R:
             curShip->rotate(); // rotate by changing curShip's squares' positions
-            if(!tryMove(curShip,curX,curY)){curShip->rotate();}; // if out of bounds, rotate to original position
+            if(!tryMove(curShip,curX,curY))
+            {
+                curShip->rotate();
+                ui->Warning->setText("Not enough space to rotate!");
+                displayWarning();
+            }; // if out of bounds, rotate to original position
             break;
         case Qt::Key_Space: //shortcut for confirm button
             confirmPlacement();
@@ -282,6 +296,15 @@ bool SetupScreen::checkSetupDone()
 
 void SetupScreen::confirmPlacement()
 {
+    for(int i =0; i<5; i++)
+    {
+        if (grid[curX + curShip->x(i)][curY - curShip->y(i)]!=empty)
+        {
+            ui->Warning->setText("Ships cannot overlap!");
+            displayWarning();
+            return;
+        }
+    }
     //for all 5 squares of curShip, store their X,Y coordinates (0-9) in the grid[10][10]
     for(int i =0; i<5; i++)
     {
@@ -314,6 +337,19 @@ void SetupScreen::cancelPlacement()
     repaint();
     curButton->show(); // reshow current ship button
     focusShipButtons();
+}
+
+void SetupScreen::displayWarning()
+{
+    ui->Warning->show();
+    QGraphicsOpacityEffect *eff = new QGraphicsOpacityEffect(this);
+    ui->Warning->setGraphicsEffect(eff);
+    QPropertyAnimation *a = new QPropertyAnimation(eff,"opacity");
+    a->setDuration(2000);
+    a->setStartValue(1);
+    a->setEndValue(0);
+    a->setEasingCurve(QEasingCurve::OutBack);
+    a->start(QPropertyAnimation::DeleteWhenStopped);
 }
 
 SetupScreen::~SetupScreen()

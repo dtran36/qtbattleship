@@ -676,9 +676,37 @@
     <bool>true</bool>
    </property>
   </widget>
+  <widget class="QLabel" name="Warning">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>363</y>
+     <width>300</width>
+     <height>70</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>14</pointsize>
+    </font>
+   </property>
+   <property name="autoFillBackground">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Warning!</string>
+   </property>
+   <property name="scaledContents">
+    <bool>true</bool>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+  </widget>
   <zorder>frame_2</zorder>
   <zorder>frame</zorder>
   <zorder>lblSetupTitle</zorder>
+  <zorder>Warning</zorder>
  </widget>
  <resources/>
  <connections/>
