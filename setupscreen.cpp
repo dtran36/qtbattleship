@@ -61,7 +61,7 @@ void SetupScreen::on_pushCarrier_clicked()
     repaint();
 
     //sets position of warning to current ship
-    ui->Warning->setGeometry(75,143,200,40);
+    ui->Warning->setGeometry(75,142,200,40);
 
     //make sure user can't press ship buttons while curShip is not empty
     focusBoard();
@@ -75,7 +75,7 @@ void SetupScreen::on_pushBattleship_clicked()
     curShip = new Ship(battleship);
     repaint();
     focusBoard();
-    ui->Warning->setGeometry(75,264,200,40);
+    ui->Warning->setGeometry(75,262,200,40);
 }
 
 void SetupScreen::on_pushSubmarine_clicked()
@@ -86,7 +86,7 @@ void SetupScreen::on_pushSubmarine_clicked()
     curShip = new Ship(submarine);
     repaint();
     focusBoard();
-    ui->Warning->setGeometry(75,383,200,40);
+    ui->Warning->setGeometry(75,382,200,40);
 }
 
 void SetupScreen::on_pushDestroyer_clicked()
@@ -108,7 +108,7 @@ void SetupScreen::on_pushPatrol_clicked()
     curShip = new Ship(patrol);
     repaint();
     focusBoard();
-    ui->Warning->setGeometry(75,621,200,40);
+    ui->Warning->setGeometry(75,624,200,40);
 }
 
 void SetupScreen::on_pushButton_clicked() //user clicks "confirm"
