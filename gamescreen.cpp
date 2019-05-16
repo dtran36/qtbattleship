@@ -160,7 +160,11 @@ void GameScreen::mousePressEvent(QMouseEvent* event)
             int x_grid_pos = rand() % 10;
             int y_grid_pos = rand() % 10;
 
-            if(player2HitorMiss[x_grid_pos][y_grid_pos]!=unknown) return;
+            while(player2HitorMiss[x_grid_pos][y_grid_pos]!=unknown)
+            {
+                x_grid_pos = rand() % 10;
+                y_grid_pos = rand() % 10;
+            }
 
             if(player2Grid[x_grid_pos][y_grid_pos]==empty)
             {

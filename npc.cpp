@@ -44,6 +44,14 @@ bool npc::placeRandom(Ship *newPiece, int newX, int newY)
         // if X or Y is not within 0-9, or square is taken
         if (x < 0 || x >= 10 || y < 0 || y >= 10 || grid[x][y]!=empty)
             return false; //new position ship is out of bounds
+
+        // strategic placement: no ships are touching
+        int arrX[4] = {x+1,x-1,x,x};
+        int arrY[4] = {y,y,y+1,y-1};
+        for (int j =0;j<4;j++) {
+            if (grid[arrX[j]][arrY[j]]!=newPiece->getType() && grid[arrX[j]][arrY[j]]!=empty)
+                return false;
+        }
     }
 
     // new position ship is within grid bounds
@@ -85,4 +93,9 @@ void npc::randomize_board()
         }
         delete curShip;
     }
+}
+
+void npc::getOpponentData(int dummy, const matrix &opp)
+{
+    oppData = new matrix(opp);
 }
