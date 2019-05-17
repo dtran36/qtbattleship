@@ -11,6 +11,8 @@
 #include <QSoundEffect>
 
 enum HitorMiss{unknown, hit, miss};
+enum Direction {none,leftDir,rightDir,upDir,downDir};
+
 
 namespace Ui {
 class GameScreen;
@@ -66,6 +68,24 @@ private:
     int currentPlayer = 1;
     QSoundEffect* explosion;
     QSoundEffect* splash;
+
+    //NPC STUFF
+
+    std::pair<int,int> decideShot();
+    std::pair<int,int> generateFirstShot();
+    std::pair<int,int> generateSearchShot();
+    void generateTargetingSequence(const std::pair<int,int>& target);
+
+    int probGrid[10][10];
+
+    bool finishingMode = false;
+    int oppShips[6]= {0,5,4,3,3,2};
+
+    std::vector<std::pair<int,std::pair<int,int>>> targetingSequence;
+    Direction currDirection = none;
+
+    std::pair<int,int> currTarget = std::make_pair(-1,-1);
+    std::pair<int,int> origTarget = std::make_pair(-1,-1);
 };
 
 #endif // GAMESCREEN_H

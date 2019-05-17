@@ -19,6 +19,8 @@ GameScreen::GameScreen(QWidget *parent) :
         {
             player1HitorMiss[i][j]=unknown;
             player2HitorMiss[i][j]=unknown;
+
+            probGrid[i][j]=100;
         }
     }
 }
@@ -156,9 +158,12 @@ void GameScreen::mousePressEvent(QMouseEvent* event)
         {
             currentPlayer=2;
         }
-        else {
-            int x_grid_pos = rand() % 10;
-            int y_grid_pos = rand() % 10;
+        else //NPC TURN
+        {
+            const std::pair<int,int>& shot = generateFirstShot();
+//            const std::pair<int,int>& shot = generateSearchShot();
+            int x_grid_pos = shot.first;
+            int y_grid_pos = shot.second;
 
             while(player2HitorMiss[x_grid_pos][y_grid_pos]!=unknown)
             {
@@ -248,6 +253,53 @@ void GameScreen::playerXWins(const int x)
 void GameScreen::setVersus()
 {
     versus = true;
+}
+
+std::pair<int,int> GameScreen::generateFirstShot()
+{
+    int randX = rand() % 2 + 4;
+    int randY = rand() % 2 + 4;
+    return std::make_pair(randX, randY);
+}
+
+//std::pair<int,int> GameScreen::decideShot()
+//{
+
+//}
+
+std::pair<int,int> GameScreen::generateSearchShot()
+{
+    int max = 0;
+    std::vector<std::pair<int,int>> possibleShots;
+    for(int i =0; i<10; i++)
+    {
+        for(int j=0; j<10; j++)
+        {
+            if (probGrid[i][j]<max)
+                continue;
+            else if (probGrid[i][j]==max) possibleShots.push_back(std::make_pair(i, j));
+            else // if (probGrid[i][j]>max)
+            {
+                max = probGrid[i][j];
+                possibleShots.clear();
+                possibleShots.push_back(std::make_pair(i, j));
+            }
+        }
+    }
+    return possibleShots[rand() % possibleShots.size()];
+}
+
+void GameScreen::generateTargetingSequence(const std::pair<int,int>& target)
+{
+    const int x = target.first;
+    const int y = target.second;
+
+    const int arrX[4] = {x+1,x-1,x,x};
+    const int arrY[4] = {y,y,y+1,y-1};
+    for (int i =0;i<4;i++)
+    { targetingSequence.push_back(std::make_pair(probGrid[arrX[i]][arrY[i]],std::make_pair(arrX[i],arrY[i])));
+    }
+    std::sort(targetingSequence.begin(), targetingSequence.end());
 }
 
 GameScreen::~GameScreen()
