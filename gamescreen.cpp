@@ -160,21 +160,17 @@ void GameScreen::mousePressEvent(QMouseEvent* event)
         }
         else //NPC TURN
         {
-            const std::pair<int,int>& shot = generateFirstShot();
-//            const std::pair<int,int>& shot = generateSearchShot();
+//            const std::pair<int,int>& shot = generateFirstShot();
+            const std::pair<int,int>& shot = generateSearchShot();
             int x_grid_pos = shot.first;
             int y_grid_pos = shot.second;
-
-            while(player2HitorMiss[x_grid_pos][y_grid_pos]!=unknown)
-            {
-                x_grid_pos = rand() % 10;
-                y_grid_pos = rand() % 10;
-            }
 
             if(player2Grid[x_grid_pos][y_grid_pos]==empty)
             {
                 splash->play();
                 player2HitorMiss[x_grid_pos][y_grid_pos]=miss;
+
+                adjustProbGrid(shot);
             }
             else {
                 explosion->play();
@@ -182,6 +178,8 @@ void GameScreen::mousePressEvent(QMouseEvent* event)
                 player2Grid[x_grid_pos][y_grid_pos]=empty;
                 player2HitorMiss[x_grid_pos][y_grid_pos]=hit;
                 checkIfDestroyed();
+
+                adjustProbGrid(shot);
             }
             currentPlayer=1;
             update();
@@ -300,6 +298,148 @@ void GameScreen::generateTargetingSequence(const std::pair<int,int>& target)
     { targetingSequence.push_back(std::make_pair(probGrid[arrX[i]][arrY[i]],std::make_pair(arrX[i],arrY[i])));
     }
     std::sort(targetingSequence.begin(), targetingSequence.end());
+}
+
+void GameScreen::reverseDir()
+{
+    switch (currDirection) {
+        case none:
+            break;
+        case leftDir:
+            currDirection = rightDir;
+            return;
+        case rightDir:
+            currDirection = leftDir;
+            return;
+        case upDir:
+            currDirection = downDir;
+            return;
+        case downDir:
+            currDirection = upDir;
+            return;
+    }
+}
+
+bool GameScreen::checkSunk(const ShipType& hitShip)
+{
+    oppShips[hitShip]-=1;
+    if (oppShips[hitShip]==0) return true;
+    return false;
+}
+
+void GameScreen::adjustProbGrid(std::pair<int,int> input)
+{
+    const int x = input.first;
+    const int y = input.second;
+
+    const int testing = 2; // number adjacent squares to adjust
+
+    probGrid[x][y]=0;
+    if(player2HitorMiss[x][y]==miss)
+    {
+
+
+        for (int i =0;i<4;i++) // DECREASE probability in cardinal directions
+        {
+            int x_dir = x;
+            int y_dir = y;
+
+            int minusprob = testing*5;
+            switch (i) {
+                case 0: // adjust right
+                    for (int j=0; j<testing;j++)
+                    {
+                        if (x_dir+1 >=10)
+                            break;
+                        probGrid[++x_dir][y]-=minusprob;
+                        minusprob-=5;
+                    }
+                    break;
+                case 1: // adjust left
+                    for (int j=0; j<testing;j++)
+                    {
+                        if (x_dir-1 < 0)
+                            break;
+                        probGrid[--x_dir][y]-=minusprob;
+                        minusprob-=5;
+                    }
+                    break;
+
+                case 2: // adjust down
+                    for (int j=0; j<testing;j++)
+                    {
+                        if (y_dir+1 >=10)
+                            break;
+                        probGrid[x][++y_dir]-=minusprob;
+                        minusprob-=5;
+                    }
+                    break;
+
+                case 3: //adjust up
+                    for (int j=0; j<testing;j++)
+                    {
+                        if (y_dir-1 < 0)
+                            break;
+                        probGrid[x][--y_dir]-=minusprob;
+                        minusprob-=5;
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+    else // used for first hits
+    {
+        for (int i =0;i<4;i++) // INCREASE probability in cardinal directions
+        {
+            int x_dir = x;
+            int y_dir = y;
+            int prob = testing*5;
+            switch (i) {
+                case 0:
+                    for (int j=0; j<testing;j++)
+                    {
+                        if (x_dir+1 >=10)
+                            break;
+                        probGrid[++x_dir][y]+=prob;
+                        prob-=5;
+                    }
+                    break;
+                case 1:
+                    for (int j=0; j<testing;j++)
+                    {
+                        if (x_dir-1 < 0)
+                            break;
+                        probGrid[--x_dir][y]+=prob;
+                        prob-=5;
+                    }
+                    break;
+
+                case 2:
+                    for (int j=0; j<testing;j++)
+                    {
+                        if (y_dir+1 >=10)
+                            break;
+                        probGrid[x][++y_dir]+=prob;
+                        prob-=5;
+                    }
+                    break;
+
+                case 3:
+                    for (int j=0; j<testing;j++)
+                    {
+                        if (y_dir-1 < 0)
+                            break;
+                        probGrid[x][--y_dir]+=prob;
+                        prob-=5;
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
 }
 
 GameScreen::~GameScreen()

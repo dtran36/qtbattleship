@@ -72,9 +72,15 @@ private:
     //NPC STUFF
 
     std::pair<int,int> decideShot();
+
     std::pair<int,int> generateFirstShot();
     std::pair<int,int> generateSearchShot();
     void generateTargetingSequence(const std::pair<int,int>& target);
+
+    void adjustProbGrid(std::pair<int,int> input);
+
+    void reverseDir();
+    bool checkSunk(const ShipType& hitShip);
 
     int probGrid[10][10];
 
