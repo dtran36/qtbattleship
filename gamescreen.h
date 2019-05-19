@@ -7,12 +7,14 @@
 #include <QPainter>
 #include <QMouseEvent>
 #include <QMediaPlayer>
-
 #include <QSoundEffect>
+#include <vector>
 
 #include<QDebug>
 
 enum HitorMiss{unknown, hit, miss};
+
+enum direction{none,up,down,left_,right_};
 
 namespace Ui {
 class GameScreen;
@@ -86,10 +88,95 @@ private:
 
     int probGrid[10][10]; //!< Each element holds int value representing probability
 
-// NEW TESTING
-
     bool targetMode = false;
     bool lastShotSunk = false;
+    std::pair<int,int> origSquare = std::make_pair(-1,-1);
+
+    std::vector<std::pair<int,std::pair<int,int>>> turnBuffer;
+
+    int lastX = 0;
+    int lastY = 0;
+
+
+// NEW TESTING
+    std::pair<int,int> generateTargetShot()
+    {
+        std::pair<int,int> rval = std::make_pair(0,0);
+
+        if (orientation==0)
+        {
+            if(turnBuffer.empty())
+            {
+//            qDebug()<<"Orientation is currently unknown.";
+
+                //Search the 4 adjacent squares for highest probability.
+                const int arrX[4] = {1,-1,0,0};
+                const int arrY[4] = {0,0,-1,1};
+
+                //right,left,up,down
+                for (int i = 0; i < 4; ++i)
+                {
+                    int x = origSquare.first+arrX[i];
+                    int y = origSquare.second+arrY[i];
+                    if (x < 0 || x >= 10 || y < 0 || y >= 10)
+                    {
+                        break;
+                    }
+                    turnBuffer.push_back(std::make_pair(probGrid[x][y],std::make_pair(x,y)));
+                }
+                std::sort(turnBuffer.begin(),turnBuffer.end());
+
+//            for (int i = 0; i < 4; ++i) {
+//                qDebug()<<turnBuffer[i].second.first<<","<<turnBuffer[i].second.second;
+//            }
+            }
+            rval = turnBuffer[turnBuffer.size()-1].second;
+            turnBuffer.pop_back();
+        }
+        else if(orientation!=0)//ORIENTATION FOUND
+        {
+            qDebug()<<"ORIENTATION FOUND";
+            switch (currDirection) {
+            case none:
+                qDebug()<<"ERROR: NO DIRECTION";
+                break;
+            case up:
+                qDebug()<<"UP from LAST SHOT"<<lastX<<lastY;
+                rval = std::make_pair(lastX,lastY-1);
+                break;
+            case down:
+                qDebug()<<"DOWN from LAST SHOT"<<lastX<<lastY;
+                rval = std::make_pair(lastX,lastY+1);
+                break;
+            case left_:
+                qDebug()<<"LEFT from LAST SHOT"<<lastX<<lastY;
+                rval = std::make_pair(lastX-1,lastY);
+                break;
+            case right_:
+                qDebug()<<"RIGHT from LAST SHOT:"<<lastX<<lastY;
+                rval = std::make_pair(lastX+1,lastY);
+                break;
+            }
+        }
+
+        lastX = rval.first;
+        lastY = rval.second;
+
+        return rval;
+    }
+
+    void setOrigSquare(std::pair<int,int> newFirstHit)
+    {
+        origSquare = newFirstHit;
+        orientation = 0;
+        currDirection = none;
+
+    }
+
+//    std::pair<int,int> nextShot = std::make_pair(-1,-1);
+
+    int orientation = 0; //!<0,1,2 = unknown, horizontal, vertical
+    direction currDirection = none;
 };
 
 #endif // GAMESCREEN_H

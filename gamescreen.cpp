@@ -164,7 +164,7 @@ void GameScreen::mousePressEvent(QMouseEvent* event)
             if (targetMode)
             {
 //                qDebug()<<"GENERATING TARGET SHOT";
-                shot = generateSearchShot();
+                shot = generateTargetShot();
             }
             else {
 //                qDebug()<<"GENERATING NORMAL SHOT";
@@ -194,15 +194,50 @@ void GameScreen::mousePressEvent(QMouseEvent* event)
                 {
                     if(lastShotSunk)
                         targetMode = false;
+                    if(orientation==0)
+                    {
+                        if(shot.first == origSquare.first) // X did not change = vertical orientation
+                        {
+                            orientation = 2;
+                            int diffY = shot.second-origSquare.second;
+                            if(diffY > 0)
+                            {
+                                currDirection = down;
+                            }
+                            else {
+                                currDirection = up;
+                            }
+                        }
+                        if(shot.second == origSquare.second) // Y did not change = horizontal orientation
+                        {
+                            orientation = 1;
+                            int diffX = shot.first-origSquare.first;
+                            if(diffX > 0)
+                            {
+                                currDirection = right_;
+                            }
+                            else {
+                                currDirection = left_;
+                            }
+                        }
+//                        qDebug()<<"ORIENTATION IS:"<<orientation;
+                        qDebug()<<"DIRECTION IS:"<<currDirection;
+                    }
                 }
                 else
+                {
                     targetMode = true;
-
+                    setOrigSquare(shot);
+                    lastX = shot.first;
+                    lastY = shot.second;
+//                    qDebug()<<"NEW FIRST HIT:("<<origSquare.first<<","<<origSquare.second<<")";
+                }
                 adjustProbGrid(shot);
             }
             currentPlayer=1;
             update();
 
+//            qDebug()<<"LAST SHOT:("<<lastShot.first<<","<<lastShot.second<<")";
 //            qDebug()<<"TARGET MODE:"<<targetMode;
 //            qDebug()<<"LAST SHOT SUNK:"<< lastShotSunk;
         }
