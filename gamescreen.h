@@ -66,6 +66,8 @@ private:
     int player1Ships[6]={0,5,4,3,3,2}; //!<Keeps track of player ships
     int player2Ships[6]={0,5,4,3,3,2};
 
+    bool player1ShipsSunk[6]={1,0,0,0,0,0};
+
     bool versus = false; //!<Keeps track of mode
 
     int currentPlayer = 1;//!<Keeps track of current player for visual purposes
@@ -97,11 +99,19 @@ private:
     int lastX = 0;
     int lastY = 0;
 
+    bool secondLastShotMissed = false;
+    bool lastShotMissed = false;
+
 
 // NEW TESTING
     std::pair<int,int> generateTargetShot()
     {
         std::pair<int,int> rval = std::make_pair(0,0);
+
+        if(lastShotMissed && secondLastShotMissed)
+        {
+            orientation=0;
+        }
 
         if (orientation==0)
         {
@@ -120,7 +130,7 @@ private:
                     int y = origSquare.second+arrY[i];
                     if (x < 0 || x >= 10 || y < 0 || y >= 10)
                     {
-                        break;
+                        continue;
                     }
                     turnBuffer.push_back(std::make_pair(probGrid[x][y],std::make_pair(x,y)));
                 }
@@ -136,26 +146,44 @@ private:
         else if(orientation!=0)//ORIENTATION FOUND
         {
             qDebug()<<"ORIENTATION FOUND";
-            switch (currDirection) {
-            case none:
-                qDebug()<<"ERROR: NO DIRECTION";
-                break;
-            case up:
-                qDebug()<<"UP from LAST SHOT"<<lastX<<lastY;
-                rval = std::make_pair(lastX,lastY-1);
-                break;
-            case down:
-                qDebug()<<"DOWN from LAST SHOT"<<lastX<<lastY;
-                rval = std::make_pair(lastX,lastY+1);
-                break;
-            case left_:
-                qDebug()<<"LEFT from LAST SHOT"<<lastX<<lastY;
-                rval = std::make_pair(lastX-1,lastY);
-                break;
-            case right_:
-                qDebug()<<"RIGHT from LAST SHOT:"<<lastX<<lastY;
-                rval = std::make_pair(lastX+1,lastY);
-                break;
+
+            bool done = false;
+            while(!done)
+            {
+                switch (currDirection) {
+                case none:
+                    qDebug()<<"ERROR: NO DIRECTION";
+                    break;
+                case up:
+                    qDebug()<<"UP from LAST SHOT"<<lastX<<lastY;
+//                    if (lastY-1 <0) break;
+                    rval = std::make_pair(lastX,lastY-1);
+                    break;
+                case down:
+                    qDebug()<<"DOWN from LAST SHOT"<<lastX<<lastY;
+//                    if (lastY+1 >=10) break;
+                    rval = std::make_pair(lastX,lastY+1);
+                    break;
+                case left_:
+                    qDebug()<<"LEFT from LAST SHOT"<<lastX<<lastY;
+//                    if (lastX-1 < 0) break;
+                    rval = std::make_pair(lastX-1,lastY);
+                    break;
+                case right_:
+                    qDebug()<<"RIGHT from LAST SHOT:"<<lastX<<lastY;
+//                    if (lastX+1 >=10) break;
+                    rval = std::make_pair(lastX+1,lastY);
+                    break;
+                }
+                if (rval.first < 0 || rval.first >= 10 || rval.second < 0 || rval.second >= 10)
+                {
+                    reverseDirection();
+                    lastX = origSquare.first;
+                    lastY = origSquare.second;
+                }
+                else {
+                    done = true;
+                }
             }
         }
 
@@ -167,6 +195,7 @@ private:
 
     void setOrigSquare(std::pair<int,int> newFirstHit)
     {
+        qDebug()<<"SETTING NEW OG SQUARE";
         origSquare = newFirstHit;
         orientation = 0;
         currDirection = none;
@@ -177,6 +206,31 @@ private:
 
     int orientation = 0; //!<0,1,2 = unknown, horizontal, vertical
     direction currDirection = none;
+
+    void reverseDirection()
+    {
+        switch (currDirection) {
+        case none:
+            qDebug()<<"ERROR: GAMESCREEN CPP, NPC MISS";
+            break;
+        case up:
+            qDebug()<<"SWITCHED DIRECTION U->D";
+            currDirection = down;
+            break;
+        case down:
+            qDebug()<<"SWITCHED DIRECTION D->U";
+            currDirection = up;
+            break;
+        case left_:
+            qDebug()<<"SWITCHED DIRECTION L->R";
+            currDirection = right_;
+            break;
+        case right_:
+            qDebug()<<"SWITCHED DIRECTION R->L";
+            currDirection = left_;
+            break;
+        }
+    }
 };
 
 #endif // GAMESCREEN_H

@@ -163,11 +163,11 @@ void GameScreen::mousePressEvent(QMouseEvent* event)
             std::pair<int,int> shot;
             if (targetMode)
             {
-//                qDebug()<<"GENERATING TARGET SHOT";
+                qDebug()<<"GENERATING TARGET SHOT";
                 shot = generateTargetShot();
             }
             else {
-//                qDebug()<<"GENERATING NORMAL SHOT";
+                qDebug()<<"GENERATING NORMAL SHOT";
                 shot = generateSearchShot();
             }
 
@@ -179,8 +179,21 @@ void GameScreen::mousePressEvent(QMouseEvent* event)
                 splash->play();
                 player2HitorMiss[x_grid_pos][y_grid_pos]=miss;
 
+                if(targetMode) //reverse direction
+                {
+                    if (currDirection!=none)
+                    {
+                        reverseDirection();
+                        lastX = origSquare.first;
+                        lastY = origSquare.second;
+                    }
+                }
+
                 adjustProbGrid(shot);
                 lastShotSunk = false;
+
+                secondLastShotMissed = lastShotMissed;
+                lastShotMissed = true;
             }
             else //NPC HIT
             {
@@ -190,47 +203,67 @@ void GameScreen::mousePressEvent(QMouseEvent* event)
                 player2HitorMiss[x_grid_pos][y_grid_pos]=hit;
                 checkIfDestroyed();
 
+                secondLastShotMissed = lastShotMissed;
+                lastShotMissed = false;
+
                 if (targetMode)
                 {
                     if(lastShotSunk)
-                        targetMode = false;
-                    if(orientation==0)
                     {
-                        if(shot.first == origSquare.first) // X did not change = vertical orientation
+                        qDebug()<<"SWITCHING TO SEARCHING MODE";
+                        targetMode = false;
+                        lastShotSunk = false;
+                    }
+                    else{
+                        if(orientation==0)
                         {
-                            orientation = 2;
-                            int diffY = shot.second-origSquare.second;
-                            if(diffY > 0)
+                            if(shot.first == origSquare.first) // X did not change = vertical orientation
                             {
-                                currDirection = down;
+                                orientation = 2;
+                                int diffY = shot.second-origSquare.second;
+                                if(diffY > 0)
+                                {
+                                    currDirection = down;
+                                }
+                                else {
+                                    currDirection = up;
+                                }
                             }
-                            else {
-                                currDirection = up;
-                            }
-                        }
-                        if(shot.second == origSquare.second) // Y did not change = horizontal orientation
-                        {
-                            orientation = 1;
-                            int diffX = shot.first-origSquare.first;
-                            if(diffX > 0)
+                            if(shot.second == origSquare.second) // Y did not change = horizontal orientation
                             {
-                                currDirection = right_;
+                                orientation = 1;
+                                int diffX = shot.first-origSquare.first;
+                                if(diffX > 0)
+                                {
+                                    currDirection = right_;
+                                }
+                                else {
+                                    currDirection = left_;
+                                }
                             }
-                            else {
-                                currDirection = left_;
-                            }
+    //                        qDebug()<<"ORIENTATION IS:"<<orientation;
+                            qDebug()<<"DIRECTION IS:"<<currDirection;
                         }
-//                        qDebug()<<"ORIENTATION IS:"<<orientation;
-                        qDebug()<<"DIRECTION IS:"<<currDirection;
                     }
                 }
                 else
                 {
-                    targetMode = true;
-                    setOrigSquare(shot);
-                    lastX = shot.first;
-                    lastY = shot.second;
-//                    qDebug()<<"NEW FIRST HIT:("<<origSquare.first<<","<<origSquare.second<<")";
+                    qDebug()<<"NEW FIRST HIT:("<<origSquare.first<<","<<origSquare.second<<")";
+                    if(lastShotSunk)
+                    {
+                        qDebug()<<"FIRST HIT SUNK, SWITCHING TO SEARCHING MODE";
+                        targetMode = false;
+                        lastShotSunk = false;
+                    }
+                    else {
+                        qDebug()<<"SWITCHING TO TARGETING MODE";
+                        targetMode = true;
+                        setOrigSquare(shot);
+                        lastX = shot.first;
+                        lastY = shot.second;
+                        qDebug()<<"CLEARING TURN BUFFER";
+                        turnBuffer.clear();
+                    }
                 }
                 adjustProbGrid(shot);
             }
@@ -270,11 +303,21 @@ void GameScreen::mousePressEvent(QMouseEvent* event)
 void GameScreen::checkIfDestroyed()
 {
     lastShotSunk = false;
-    if(player1Ships[carrier]==0) {ui->carrierLeft->hide(); lastShotSunk = true;}
-    if(player1Ships[battleship]==0) {ui->battleshipLeft->hide(); lastShotSunk = true;}
-    if(player1Ships[submarine]==0) {ui->submarineLeft->hide(); lastShotSunk = true;}
-    if(player1Ships[destroyer]==0) {ui->destroyerLeft->hide(); lastShotSunk = true;}
-    if(player1Ships[patrol]==0) {ui->patrolLeft->hide(); lastShotSunk = true;}
+
+    bool oldShipsSunk[6];
+
+    for (int i = 1; i < 6; ++i)
+        oldShipsSunk[i] = player1ShipsSunk[i];
+
+    if(player1Ships[carrier]==0) {ui->carrierLeft->hide(); player1ShipsSunk[carrier] = true;}
+    if(player1Ships[battleship]==0) {ui->battleshipLeft->hide(); player1ShipsSunk[battleship] = true;}
+    if(player1Ships[submarine]==0) {ui->submarineLeft->hide(); player1ShipsSunk[submarine] = true;}
+    if(player1Ships[destroyer]==0) {ui->destroyerLeft->hide(); player1ShipsSunk[destroyer] = true;}
+    if(player1Ships[patrol]==0) {ui->patrolLeft->hide(); player1ShipsSunk[patrol] = true;}
+
+    for (int i = 1; i < 6; ++i)
+        if(oldShipsSunk[i] != player1ShipsSunk[i])
+            lastShotSunk = true;
 
     if(player2Ships[carrier]==0) ui->carrierRight->hide();
     if(player2Ships[battleship]==0) ui->battleshipRight->hide();
