@@ -160,7 +160,17 @@ void GameScreen::mousePressEvent(QMouseEvent* event)
         }
         else //NPC TURN
         {
-            const std::pair<int,int>& shot = generateSearchShot();
+            std::pair<int,int> shot;
+            if (targetMode)
+            {
+//                qDebug()<<"GENERATING TARGET SHOT";
+                shot = generateSearchShot();
+            }
+            else {
+//                qDebug()<<"GENERATING NORMAL SHOT";
+                shot = generateSearchShot();
+            }
+
             int x_grid_pos = shot.first;
             int y_grid_pos = shot.second;
 
@@ -192,8 +202,9 @@ void GameScreen::mousePressEvent(QMouseEvent* event)
             }
             currentPlayer=1;
             update();
-            qDebug()<<"TARGET MODE:"<<targetMode;
-            qDebug()<<"LAST SHOT SUNK:"<< lastShotSunk;
+
+//            qDebug()<<"TARGET MODE:"<<targetMode;
+//            qDebug()<<"LAST SHOT SUNK:"<< lastShotSunk;
         }
     }
     else //if (currentPlayer==2)
