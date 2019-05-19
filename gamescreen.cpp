@@ -164,24 +164,36 @@ void GameScreen::mousePressEvent(QMouseEvent* event)
             int x_grid_pos = shot.first;
             int y_grid_pos = shot.second;
 
-            if(player2Grid[x_grid_pos][y_grid_pos]==empty)
+            if(player2Grid[x_grid_pos][y_grid_pos]==empty) //NPC MISS
             {
                 splash->play();
                 player2HitorMiss[x_grid_pos][y_grid_pos]=miss;
 
                 adjustProbGrid(shot);
+                lastShotSunk = false;
             }
-            else {
+            else //NPC HIT
+            {
                 explosion->play();
                 player1Ships[player2Grid[x_grid_pos][y_grid_pos]]--;
                 player2Grid[x_grid_pos][y_grid_pos]=empty;
                 player2HitorMiss[x_grid_pos][y_grid_pos]=hit;
                 checkIfDestroyed();
 
+                if (targetMode)
+                {
+                    if(lastShotSunk)
+                        targetMode = false;
+                }
+                else
+                    targetMode = true;
+
                 adjustProbGrid(shot);
             }
             currentPlayer=1;
             update();
+            qDebug()<<"TARGET MODE:"<<targetMode;
+            qDebug()<<"LAST SHOT SUNK:"<< lastShotSunk;
         }
     }
     else //if (currentPlayer==2)
@@ -211,16 +223,17 @@ void GameScreen::mousePressEvent(QMouseEvent* event)
 
 void GameScreen::checkIfDestroyed()
 {
-    if(player1Ships[carrier]==0) ui->carrierLeft->hide();
-    if(player1Ships[battleship]==0) ui->battleshipLeft->hide();
-    if(player1Ships[submarine]==0) ui->submarineLeft->hide();
-    if(player1Ships[destroyer]==0) ui->destroyerLeft->hide();
-    if(player1Ships[patrol]==0) ui->patrolLeft->hide();
+    lastShotSunk = false;
+    if(player1Ships[carrier]==0) {ui->carrierLeft->hide(); lastShotSunk = true;}
+    if(player1Ships[battleship]==0) {ui->battleshipLeft->hide(); lastShotSunk = true;}
+    if(player1Ships[submarine]==0) {ui->submarineLeft->hide(); lastShotSunk = true;}
+    if(player1Ships[destroyer]==0) {ui->destroyerLeft->hide(); lastShotSunk = true;}
+    if(player1Ships[patrol]==0) {ui->patrolLeft->hide(); lastShotSunk = true;}
 
     if(player2Ships[carrier]==0) ui->carrierRight->hide();
     if(player2Ships[battleship]==0) ui->battleshipRight->hide();
     if(player2Ships[submarine]==0) ui->submarineRight->hide();
-    if(player2Ships[destroyer]==0)ui->destroyerRight->hide();
+    if(player2Ships[destroyer]==0) ui->destroyerRight->hide();
     if(player2Ships[patrol]==0) ui->patrolRight->hide();
 
     bool winPlayer1=true;

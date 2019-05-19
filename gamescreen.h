@@ -10,6 +10,8 @@
 
 #include <QSoundEffect>
 
+#include<QDebug>
+
 enum HitorMiss{unknown, hit, miss};
 
 namespace Ui {
@@ -83,6 +85,11 @@ private:
 
 
     int probGrid[10][10]; //!< Each element holds int value representing probability
+
+// NEW TESTING
+
+    bool targetMode = false;
+    bool lastShotSunk = false;
 };
 
 #endif // GAMESCREEN_H
