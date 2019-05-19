@@ -18,4 +18,16 @@
         <file>Splash.wav</file>
         <file>Explosion.wav</file>
     </qresource>
+    <qresource prefix="/ships">
+        <file>battleship1.png</file>
+        <file>battleship2.png</file>
+        <file>submarine1.png</file>
+        <file>patrol2.png</file>
+        <file>patrol1.png</file>
+        <file>submarine2.png</file>
+        <file>carrier1.png</file>
+        <file>carrier2.png</file>
+        <file>destroyer1.png</file>
+        <file>destroyer2.png</file>
+    </qresource>
 </RCC>

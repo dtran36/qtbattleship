@@ -43,6 +43,21 @@ SetupScreen::SetupScreen(int x,QWidget *parent) :
     ui-> pushButton_2 -> setEnabled(false);
 
     ui->Warning->hide();
+
+    ui->pushCarrier->setStyleSheet("border: none;");
+    ui->pushBattleship->setStyleSheet("border: none;");
+    ui->pushSubmarine->setStyleSheet("border: none;");
+    ui->pushDestroyer->setStyleSheet("border: none;");
+    ui->pushPatrol->setStyleSheet("border: none;");
+
+    if(player==2)
+    {
+        ui->pushCarrier->setIcon(QIcon(":/ships/carrier2.png"));
+        ui->pushBattleship->setIcon(QIcon(":/ships/battleship2.png"));
+        ui->pushSubmarine->setIcon(QIcon(":/ships/submarine2.png"));
+        ui->pushDestroyer->setIcon(QIcon(":/ships/destroyer2.png"));
+        ui->pushPatrol->setIcon(QIcon(":/ships/patrol2.png"));
+    }
 }
 
 void SetupScreen::on_pushCarrier_clicked()

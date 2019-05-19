@@ -102,8 +102,6 @@ private:
     bool secondLastShotMissed = false;
     bool lastShotMissed = false;
 
-
-// NEW TESTING
     std::pair<int,int> generateTargetShot()
     {
         std::pair<int,int> rval = std::make_pair(0,0);
@@ -201,8 +199,6 @@ private:
         currDirection = none;
 
     }
-
-//    std::pair<int,int> nextShot = std::make_pair(-1,-1);
 
     int orientation = 0; //!<0,1,2 = unknown, horizontal, vertical
     direction currDirection = none;
