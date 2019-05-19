@@ -147,7 +147,7 @@ void GameScreen::mousePressEvent(QMouseEvent* event)
         }
         else {
             explosion->play();
-            player1Ships[player1Grid[x_grid_pos][y_grid_pos]]--;
+            player2Ships[player1Grid[x_grid_pos][y_grid_pos]]--;
             player1Grid[x_grid_pos][y_grid_pos]=empty;
             player1HitorMiss[x_grid_pos][y_grid_pos]=hit;
             checkIfDestroyed();
@@ -160,7 +160,6 @@ void GameScreen::mousePressEvent(QMouseEvent* event)
         }
         else //NPC TURN
         {
-//            const std::pair<int,int>& shot = generateFirstShot();
             const std::pair<int,int>& shot = generateSearchShot();
             int x_grid_pos = shot.first;
             int y_grid_pos = shot.second;
@@ -174,7 +173,7 @@ void GameScreen::mousePressEvent(QMouseEvent* event)
             }
             else {
                 explosion->play();
-                player2Ships[player2Grid[x_grid_pos][y_grid_pos]]--;
+                player1Ships[player2Grid[x_grid_pos][y_grid_pos]]--;
                 player2Grid[x_grid_pos][y_grid_pos]=empty;
                 player2HitorMiss[x_grid_pos][y_grid_pos]=hit;
                 checkIfDestroyed();
@@ -228,9 +227,9 @@ void GameScreen::checkIfDestroyed()
     bool winPlayer2=true;
     for(int i=0; i<6;i++)
     {
-        if(player1Ships[i]!=0)
-            winPlayer1=false;
         if(player2Ships[i]!=0)
+            winPlayer1=false;
+        if(player1Ships[i]!=0)
             winPlayer2=false;
     }
     if(winPlayer1){playerXWins(1);}
@@ -252,18 +251,6 @@ void GameScreen::setVersus()
 {
     versus = true;
 }
-
-std::pair<int,int> GameScreen::generateFirstShot()
-{
-    int randX = rand() % 2 + 4;
-    int randY = rand() % 2 + 4;
-    return std::make_pair(randX, randY);
-}
-
-//std::pair<int,int> GameScreen::decideShot()
-//{
-
-//}
 
 std::pair<int,int> GameScreen::generateSearchShot()
 {
@@ -287,157 +274,79 @@ std::pair<int,int> GameScreen::generateSearchShot()
     return possibleShots[rand() % possibleShots.size()];
 }
 
-void GameScreen::generateTargetingSequence(const std::pair<int,int>& target)
-{
-    const int x = target.first;
-    const int y = target.second;
-
-    const int arrX[4] = {x+1,x-1,x,x};
-    const int arrY[4] = {y,y,y+1,y-1};
-    for (int i =0;i<4;i++)
-    { targetingSequence.push_back(std::make_pair(probGrid[arrX[i]][arrY[i]],std::make_pair(arrX[i],arrY[i])));
-    }
-    std::sort(targetingSequence.begin(), targetingSequence.end());
-}
-
-void GameScreen::reverseDir()
-{
-    switch (currDirection) {
-        case none:
-            break;
-        case leftDir:
-            currDirection = rightDir;
-            return;
-        case rightDir:
-            currDirection = leftDir;
-            return;
-        case upDir:
-            currDirection = downDir;
-            return;
-        case downDir:
-            currDirection = upDir;
-            return;
-    }
-}
-
-bool GameScreen::checkSunk(const ShipType& hitShip)
-{
-    oppShips[hitShip]-=1;
-    if (oppShips[hitShip]==0) return true;
-    return false;
-}
 
 void GameScreen::adjustProbGrid(std::pair<int,int> input)
 {
-    const int x = input.first;
-    const int y = input.second;
+    const int x = input.first; //save x value
+    const int y = input.second; //save y value
 
-    const int testing = 2; // number adjacent squares to adjust
+    const int effectSize = 2; // number adjacent squares to adjust
 
-    probGrid[x][y]=0;
-    if(player2HitorMiss[x][y]==miss)
+    probGrid[x][y]=0; //set center to 0 probability
+
+    for (int i =0;i<4;i++) // adjust probability of 4 adjacent squares
     {
+        int x_dir = x;
+        int y_dir = y;
 
-
-        for (int i =0;i<4;i++) // DECREASE probability in cardinal directions
-        {
-            int x_dir = x;
-            int y_dir = y;
-
-            int minusprob = testing*5;
-            switch (i) {
-                case 0: // adjust right
-                    for (int j=0; j<testing;j++)
-                    {
-                        if (x_dir+1 >=10)
-                            break;
+        int minusprob = effectSize*5;
+        switch (i) {
+            case 0: // adjust right
+                for (int j=0; j<effectSize;j++)
+                {
+                    if (x_dir+1 >=10)
+                        break;
+                    if(player2HitorMiss[x][y]==miss)
                         probGrid[++x_dir][y]-=minusprob;
-                        minusprob-=5;
+                    else {
+                        probGrid[++x_dir][y]+=minusprob;
                     }
-                    break;
-                case 1: // adjust left
-                    for (int j=0; j<testing;j++)
-                    {
-                        if (x_dir-1 < 0)
-                            break;
+                    minusprob-=5;
+                }
+                break;
+            case 1: // adjust left
+                for (int j=0; j<effectSize;j++)
+                {
+                    if (x_dir-1 < 0)
+                        break;
+                    if(player2HitorMiss[x][y]==miss)
                         probGrid[--x_dir][y]-=minusprob;
-                        minusprob-=5;
+                    else {
+                        probGrid[--x_dir][y]+=minusprob;
                     }
-                    break;
+                    minusprob-=5;
+                }
+                break;
 
-                case 2: // adjust down
-                    for (int j=0; j<testing;j++)
-                    {
-                        if (y_dir+1 >=10)
-                            break;
+            case 2: // adjust down
+                for (int j=0; j<effectSize;j++)
+                {
+                    if (y_dir+1 >=10)
+                        break;
+                    if(player2HitorMiss[x][y]==miss)
                         probGrid[x][++y_dir]-=minusprob;
-                        minusprob-=5;
+                    else {
+                        probGrid[x][++y_dir]+=minusprob;
                     }
-                    break;
+                    minusprob-=5;
+                }
+                break;
 
-                case 3: //adjust up
-                    for (int j=0; j<testing;j++)
-                    {
-                        if (y_dir-1 < 0)
-                            break;
+            case 3: //adjust up
+                for (int j=0; j<effectSize;j++)
+                {
+                    if (y_dir-1 < 0)
+                        break;
+                    if(player2HitorMiss[x][y]==miss)
                         probGrid[x][--y_dir]-=minusprob;
-                        minusprob-=5;
+                    else {
+                        probGrid[x][--y_dir]+=minusprob;
                     }
-                    break;
-                default:
-                    break;
-            }
-        }
-    }
-    else // used for first hits
-    {
-        for (int i =0;i<4;i++) // INCREASE probability in cardinal directions
-        {
-            int x_dir = x;
-            int y_dir = y;
-            int prob = testing*5;
-            switch (i) {
-                case 0:
-                    for (int j=0; j<testing;j++)
-                    {
-                        if (x_dir+1 >=10)
-                            break;
-                        probGrid[++x_dir][y]+=prob;
-                        prob-=5;
-                    }
-                    break;
-                case 1:
-                    for (int j=0; j<testing;j++)
-                    {
-                        if (x_dir-1 < 0)
-                            break;
-                        probGrid[--x_dir][y]+=prob;
-                        prob-=5;
-                    }
-                    break;
-
-                case 2:
-                    for (int j=0; j<testing;j++)
-                    {
-                        if (y_dir+1 >=10)
-                            break;
-                        probGrid[x][++y_dir]+=prob;
-                        prob-=5;
-                    }
-                    break;
-
-                case 3:
-                    for (int j=0; j<testing;j++)
-                    {
-                        if (y_dir-1 < 0)
-                            break;
-                        probGrid[x][--y_dir]+=prob;
-                        prob-=5;
-                    }
-                    break;
-                default:
-                    break;
-            }
+                    minusprob-=5;
+                }
+                break;
+            default:
+                break;
         }
     }
 }

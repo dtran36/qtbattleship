@@ -11,8 +11,6 @@
 #include <QSoundEffect>
 
 enum HitorMiss{unknown, hit, miss};
-enum Direction {none,leftDir,rightDir,upDir,downDir};
-
 
 namespace Ui {
 class GameScreen;
@@ -28,20 +26,21 @@ public:
      * @param parent base class
      */
     explicit GameScreen(QWidget *parent = nullptr);
+    ~GameScreen() override;
     /**
      * @brief paintEvent Paints board based on player actions
      * @param event
      */
-
     void paintEvent(QPaintEvent* event) override;
-    ~GameScreen() override;
-
     void paintBoardLabels(QPainter& painter);
+
+    /**
+     * @brief checkIfDestroyed After shot hits, hides specific label if ship sunk and checks if game is over.
+     */
     void checkIfDestroyed();
 
 public slots:
     void setGrid(int player, const matrix& b);
-
     void setVersus();
 
 private slots:
@@ -52,46 +51,38 @@ private:
 
     void mousePressEvent(QMouseEvent* event) override;
 
-    ShipType player1Grid[10][10];
+    ShipType player1Grid[10][10];//!<Keeps track of actual ship positions
     ShipType player2Grid[10][10];
-    HitorMiss player1HitorMiss[10][10];
+    HitorMiss player1HitorMiss[10][10]; //!<Keeps track of what the player sees
     HitorMiss player2HitorMiss[10][10];
 
-    int click_x = 0;
+    int click_x = 0; //!<Keeps track of last mouse position
     int click_y = 0;
 
-    int player1Ships[6]={0,5,4,3,3,2};
+    int player1Ships[6]={0,5,4,3,3,2}; //!<Keeps track of player ships
     int player2Ships[6]={0,5,4,3,3,2};
 
-    bool versus = false;
+    bool versus = false; //!<Keeps track of mode
 
-    int currentPlayer = 1;
-    QSoundEffect* explosion;
-    QSoundEffect* splash;
+    int currentPlayer = 1;//!<Keeps track of current player for visual purposes
 
-    //NPC STUFF
+    QSoundEffect* explosion; //!<Plays when shot hit
+    QSoundEffect* splash; //!<Plays when shot missed
 
-    std::pair<int,int> decideShot();
-
-    std::pair<int,int> generateFirstShot();
+    /**
+     * @brief generateSearchShot Using only probability grid
+     * @return
+     */
     std::pair<int,int> generateSearchShot();
-    void generateTargetingSequence(const std::pair<int,int>& target);
 
+    /**
+     * @brief adjustProbGrid Increases probability of adjacent squares if hit, decreases if miss
+     * @param input Center square that was hit or miss
+     */
     void adjustProbGrid(std::pair<int,int> input);
 
-    void reverseDir();
-    bool checkSunk(const ShipType& hitShip);
 
-    int probGrid[10][10];
-
-    bool finishingMode = false;
-    int oppShips[6]= {0,5,4,3,3,2};
-
-    std::vector<std::pair<int,std::pair<int,int>>> targetingSequence;
-    Direction currDirection = none;
-
-    std::pair<int,int> currTarget = std::make_pair(-1,-1);
-    std::pair<int,int> origTarget = std::make_pair(-1,-1);
+    int probGrid[10][10]; //!< Each element holds int value representing probability
 };
 
 #endif // GAMESCREEN_H
