@@ -30,18 +30,18 @@ SOURCES += \
         mainmenu.cpp \
         mainwindow.cpp \
         matrix.cpp \
-        npc.cpp \
         setupscreen.cpp \
-        ship.cpp
+        ship.cpp \
+        singleplayer.cpp
 
 HEADERS += \
         gamescreen.h \
         mainmenu.h \
         mainwindow.h \
         matrix.h \
-        npc.h \
         setupscreen.h \
-        ship.h
+        ship.h \
+        singleplayer.h
 
 FORMS += \
         gamescreen.ui \

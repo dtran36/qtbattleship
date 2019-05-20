@@ -12,8 +12,8 @@ MainWindow::MainWindow(QWidget *parent) :
     singleplayerSetup = new SetupScreen;
     versusSetup1 = new SetupScreen;
     versusSetup2 = new SetupScreen(2);
-    game = new GameScreen;
-    bot = new npc;
+    versusGame = new GameScreen;
+    singleplayerGame = new singleplayer;
 
     //add screens to stacked widget
     stackedWidget = new QStackedWidget;
@@ -21,7 +21,8 @@ MainWindow::MainWindow(QWidget *parent) :
     stackedWidget->addWidget(singleplayerSetup);
     stackedWidget->addWidget(versusSetup1);
     stackedWidget->addWidget(versusSetup2);
-    stackedWidget->addWidget(game);
+    stackedWidget->addWidget(versusGame);
+    stackedWidget->addWidget(singleplayerGame);
 
     //connect first screen buttons to slots
     connect(firstscreen,SIGNAL(clickedSingleplayer()),this,SLOT(switchSingleplayerSetup()));
@@ -29,21 +30,14 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(firstscreen,SIGNAL(clickedQuit()),qApp,SLOT(quit()));
 
     //connect move next signals to slots
-    connect(singleplayerSetup,SIGNAL(moveNext(int,const matrix&)),this,SLOT(switchGameScreen()));
+    connect(singleplayerSetup,SIGNAL(moveNext(int,const matrix&)),this,SLOT(switchSingleplayerGame()));
     connect(versusSetup1,SIGNAL(moveNext(int,const matrix&)),this,SLOT(switchSetup2()));
-    connect(versusSetup2,SIGNAL(moveNext(int,const matrix&)),this,SLOT(switchGameScreen()));
+    connect(versusSetup2,SIGNAL(moveNext(int,const matrix&)),this,SLOT(switchVersusGame()));
 
     //when setup is done, transfers grid data to GameScreen
-    connect(singleplayerSetup,SIGNAL(moveNext(int,const matrix&)),game,SLOT(setGrid(int,const matrix&)));
-    connect(singleplayerSetup,SIGNAL(moveNext(int,const matrix&)),bot,SLOT(getOpponentData(int, const matrix&)));
-    connect(versusSetup1,SIGNAL(moveNext(int,const matrix&)),game,SLOT(setGrid(int,const matrix&)));
-    connect(versusSetup2,SIGNAL(moveNext(int,const matrix&)),game,SLOT(setGrid(int,const matrix&)));
-    //set mode to versus
-    connect(versusSetup2,SIGNAL(moveNext(int,const matrix&)),game,SLOT(setVersus()));
-
-    //connect npc
-    connect(singleplayerSetup,SIGNAL(moveNext(int,const matrix&)),bot,SLOT(getnpc()));
-    connect(bot,SIGNAL(getdata(int,const matrix&)),game,SLOT(setGrid(int,const matrix&)));
+    connect(singleplayerSetup,SIGNAL(moveNext(int,const matrix&)),singleplayerGame,SLOT(setGrid(int,const matrix&)));
+    connect(versusSetup1,SIGNAL(moveNext(int,const matrix&)),versusGame,SLOT(setGrid(int,const matrix&)));
+    connect(versusSetup2,SIGNAL(moveNext(int,const matrix&)),versusGame,SLOT(setGrid(int,const matrix&)));
 
     setCentralWidget(stackedWidget);
 }
@@ -52,7 +46,8 @@ void MainWindow::switchMainMenu(){stackedWidget->setCurrentIndex(0);}
 void MainWindow::switchSingleplayerSetup(){stackedWidget->setCurrentIndex(1);}
 void MainWindow::switchSetup1(){stackedWidget->setCurrentIndex(2);}
 void MainWindow::switchSetup2(){stackedWidget->setCurrentIndex(3);}
-void MainWindow::switchGameScreen(){stackedWidget->setCurrentIndex(4);}
+void MainWindow::switchVersusGame(){stackedWidget->setCurrentIndex(4);}
+void MainWindow::switchSingleplayerGame(){stackedWidget->setCurrentIndex(5);}
 
 MainWindow::~MainWindow()
 {

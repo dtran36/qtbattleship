@@ -3,11 +3,12 @@
 
 #include <QMainWindow>
 #include <QStackedWidget>
+
 #include "mainmenu.h"
 #include "setupscreen.h"
 #include "gamescreen.h"
 #include "matrix.h"
-#include "npc.h"
+#include "singleplayer.h"
 
 namespace Ui {
 class MainWindow;
@@ -45,7 +46,9 @@ public slots:
     /**
      * @brief switchGameScreen Switches to Game Screen.
      */
-    void switchGameScreen();
+    void switchVersusGame();
+
+    void switchSingleplayerGame();
 private:
     Ui::MainWindow *ui;
 
@@ -54,8 +57,8 @@ private:
     QFrame *singleplayerSetup = nullptr;
     QFrame *versusSetup1 = nullptr;
     QFrame *versusSetup2 = nullptr;
-    QFrame *game = nullptr;
-    npc* bot = nullptr;
+    QFrame *versusGame = nullptr;
+    QFrame *singleplayerGame = nullptr;
 };
 
 #endif // MAINWINDOW_H
