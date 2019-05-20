@@ -64,6 +64,26 @@ void GameScreen::paintEvent(QPaintEvent* event)
         for(int j=0; j<10; j++)
         {
             //left board
+            if(player1HitorMiss[i][j]!=unknown)
+            {
+                painter.setBrush(Qt::lightGray);
+                QRect box((i*46)+38, (j*46)+200, 46, 46);
+                painter.drawRect(box);
+            }
+            if(player2HitorMiss[i][j]!=unknown)
+            {
+                painter.setBrush(Qt::lightGray);
+                QRect box((i*46)+533, (j*46)+200, 46, 46);
+                painter.drawRect(box);
+            }
+        }
+    }
+
+    for(int i =0; i<10; i++)
+    {
+        for(int j=0; j<10; j++)
+        {
+            //left board
             if(player1HitorMiss[i][j]==miss)
             {
                 painter.setBrush(Qt::yellow);
@@ -141,9 +161,11 @@ void GameScreen::paintBoardLabels(QPainter& painter)
     //draw grid lines
 //    painter.drawLine(10,10, 300,300);
     for (int i = 0; i <= 10; ++i) {
-        painter.drawLine(7,200+i*46, 500,200+i*46);
+        painter.drawLine(7,200+i*46, 1000,200+i*46);
 
-        painter.drawLine(7,240,500,500);
+        painter.drawLine(38+i*46,200,38+i*46,700);
+
+        painter.drawLine(533+i*46,200,533+i*46,700);
     }
 
 }
@@ -198,6 +220,29 @@ void GameScreen::mousePressEvent(QMouseEvent* event)
             if(player2HitorMiss[x_grid_pos][y_grid_pos]!=unknown)
             {
                 qDebug()<<"NOTE: FIRING AT KNOWN POSITION!";
+
+                std::vector<std::pair<int,std::pair<int,int>>> tempBuffer;
+                const int arrX[8] = {1,-1,0,0,-1,1,-1,1};
+                const int arrY[8] = {0,0,-1,1,-1,1,1,-1};
+
+                for (int i = 0; i < 8; ++i)
+                {
+                    int x = origSquare.first+arrX[i];
+                    int y = origSquare.second+arrY[i];
+                    if (x < 0 || x >= 10 || y < 0 || y >= 10 || probGrid[x][y]==0)
+                    {
+                        continue;
+                    }
+                    tempBuffer.push_back(std::make_pair(probGrid[x][y],std::make_pair(x,y)));
+                }
+                targetMode = false;
+                if (tempBuffer.empty())
+                {
+                    qDebug()<<"ERROR: EMPTY TEMP BUFFER";
+                }
+                else {
+                    shot = tempBuffer[tempBuffer.size()-1].second;
+                }
             }
 
             lastX = x_grid_pos;
@@ -208,10 +253,11 @@ void GameScreen::mousePressEvent(QMouseEvent* event)
                 splash->play();
                 player2HitorMiss[x_grid_pos][y_grid_pos]=miss;
 
-                if(targetMode) //reverse direction
+                if(targetMode)
                 {
                     if (currDirection!=none)
                     {
+                        //reverseCounter++; //???
                         reverseDirection();
                         lastX = origSquare.first;
                         lastY = origSquare.second;
