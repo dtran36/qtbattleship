@@ -30,4 +30,10 @@
         <file>destroyer1.png</file>
         <file>destroyer2.png</file>
     </qresource>
+    <qresource prefix="/pegs">
+        <file>leftPegHit.png</file>
+        <file>leftPegMiss.png</file>
+        <file>rightPegHit.png</file>
+        <file>rightPegMiss.png</file>
+    </qresource>
 </RCC>

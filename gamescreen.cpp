@@ -23,6 +23,11 @@ GameScreen::GameScreen(QWidget *parent) :
             probGrid[i][j]=100;
         }
     }
+
+    leftPegMiss = new QPixmap(":/pegs/leftPegMiss.png");
+    leftPegHit = new QPixmap(":/pegs/leftPegHit.png");
+    rightPegMiss = new QPixmap(":/pegs/rightPegMiss.png");
+    rightPegHit = new QPixmap(":/pegs/rightPegHit.png");
 }
 
 void GameScreen::setGrid(int player, const matrix& b)
@@ -51,6 +56,9 @@ void GameScreen::paintEvent(QPaintEvent* event)
         ui->lbl_FingerRight->show();
     }
 
+    const int w = 60;
+    const int h = 60;
+
     for(int i =0; i<10; i++)
     {
         for(int j=0; j<10; j++)
@@ -59,28 +67,32 @@ void GameScreen::paintEvent(QPaintEvent* event)
             if(player1HitorMiss[i][j]==miss)
             {
                 painter.setBrush(Qt::yellow);
-                QRectF test((i*46)+33, (j*46)+200, 46, 46);
-                painter.drawRect(test);
+                QRect box((i*46)+33-24, (j*46)+200-24, w, h);
+
+                painter.drawPixmap(box,*leftPegMiss);
             }
             if(player1HitorMiss[i][j]==hit)
             {
                 painter.setBrush(Qt::red);
-                QRectF test((i*46)+33, (j*46)+200, 46, 46);
-                painter.drawRect(test);
+                QRect box((i*46)+33-24, (j*46)+200-24, w, h);
+
+                painter.drawPixmap(box,*leftPegHit);
             }
 
             //right board
             if(player2HitorMiss[i][j]==miss)
             {
                 painter.setBrush(Qt::yellow);
-                QRectF test((i*46)+533, (j*46)+200, 46, 46);
-                painter.drawRect(test);
+                QRect box((i*46)+533+20, (j*46)+200-24, w, h);
+
+                painter.drawPixmap(box,*rightPegMiss);
             }
             if(player2HitorMiss[i][j]==hit)
             {
                 painter.setBrush(Qt::red);
-                QRectF test((i*46)+533, (j*46)+200, 46, 46);
-                painter.drawRect(test);
+                QRect box((i*46)+533+20, (j*46)+200-24, w, h);
+
+                painter.drawPixmap(box,*rightPegHit);
             }
         }
     }
@@ -125,6 +137,15 @@ void GameScreen::paintBoardLabels(QPainter& painter)
         painter.drawText(test,Qt::AlignCenter,letters[i]);
         x+=46;
     }
+
+    //draw grid lines
+//    painter.drawLine(10,10, 300,300);
+    for (int i = 0; i <= 10; ++i) {
+        painter.drawLine(7,200+i*46, 500,200+i*46);
+
+        painter.drawLine(7,240,500,500);
+    }
+
 }
 
 void GameScreen::mousePressEvent(QMouseEvent* event)
@@ -174,6 +195,14 @@ void GameScreen::mousePressEvent(QMouseEvent* event)
             int x_grid_pos = shot.first;
             int y_grid_pos = shot.second;
 
+            if(player2HitorMiss[x_grid_pos][y_grid_pos]!=unknown)
+            {
+                qDebug()<<"NOTE: FIRING AT KNOWN POSITION!";
+            }
+
+            lastX = x_grid_pos;
+            lastY = y_grid_pos;
+
             if(player2Grid[x_grid_pos][y_grid_pos]==empty) //NPC MISS
             {
                 splash->play();
@@ -188,7 +217,6 @@ void GameScreen::mousePressEvent(QMouseEvent* event)
                         lastY = origSquare.second;
                     }
                 }
-
                 adjustProbGrid(shot);
                 lastShotSunk = false;
 

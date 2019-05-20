@@ -142,11 +142,12 @@ private:
             rval = turnBuffer[turnBuffer.size()-1].second;
             turnBuffer.pop_back();
         }
-        else if(orientation!=0)//ORIENTATION FOUND
+        else //if(orientation!=0)//ORIENTATION FOUND
         {
             qDebug()<<"ORIENTATION FOUND";
 
             bool done = false;
+            int reverseCounter = 0;
             while(!done)
             {
                 switch (currDirection) {
@@ -155,90 +156,136 @@ private:
                     break;
                 case up:
                     qDebug()<<"UP from LAST SHOT"<<lastX<<lastY;
-//                    if (lastY-1 <0) break;
+
                     rval = std::make_pair(lastX,lastY-1);
 
-                    while (player2HitorMiss[rval.first][rval.second]!=unknown)
+                    while (player2HitorMiss[rval.first][rval.second]==hit)
                     {
-                        qDebug()<<"INTEDEND SHOT SQUARE ALREADY TAKEN, UP AGAIN";
+                        qDebug()<<"INTEDEND SHOT SQUARE ALREADY HIT, UP AGAIN";
                         rval.second-=1;
-                        if(player2HitorMiss[rval.first][rval.second]==miss)
+                    }
+
+                    if(player2HitorMiss[rval.first][rval.second]==miss)
+                    {
+                        qDebug()<<"UP AGAIN ENCOUNTERED MISS";
+                        reverseCounter++;
+                        if (reverseCounter == 2)
                         {
-                            qDebug()<<"UP AGAIN ENCOUNTERED MISS";
-                            reverseDirection();
-                            lastX = origSquare.first;
-                            lastY = origSquare.second;
-                            rval = std::make_pair(lastX,lastY+1);
+                            qDebug()<<"REVERSE COUNTER ==2";
+                            orientation = 0;
+                            reverseCounter = 0;
+                            return generateTargetShot();
                         }
+                        reverseDirection();
+                        lastX = origSquare.first;
+                        lastY = origSquare.second;
+                        rval = std::make_pair(lastX,lastY+1);
                     }
 
                     break;
                 case down:
                     qDebug()<<"DOWN from LAST SHOT"<<lastX<<lastY;
-//                    if (lastY+1 >=10) break;
+
                     rval = std::make_pair(lastX,lastY+1);
 
-                    while (player2HitorMiss[rval.first][rval.second]!=unknown)
+                    while (player2HitorMiss[rval.first][rval.second]==hit)
                     {
-                        qDebug()<<"INTEDEND SHOT SQUARE ALREADY TAKEN, DOWN AGAIN";
+                        qDebug()<<"INTEDEND SHOT SQUARE ALREADY HIT, DOWN AGAIN";
                         rval.second+=1;
-                        if(player2HitorMiss[rval.first][rval.second]==miss)
+                    }
+
+                    if(player2HitorMiss[rval.first][rval.second]==miss)
+                    {
+                        qDebug()<<"DOWN AGAIN ENCOUNTERED MISS";
+                        reverseCounter++;
+                        if (reverseCounter == 2)
                         {
-                            qDebug()<<"DOWN AGAIN ENCOUNTERED MISS";
-                            reverseDirection();
-                            lastX = origSquare.first;
-                            lastY = origSquare.second;
-                            rval = std::make_pair(lastX,lastY-1);
+                            qDebug()<<"REVERSE COUNTER ==2";
+                            orientation = 0;
+                            reverseCounter = 0;
+                            return generateTargetShot();
                         }
+                        reverseDirection();
+                        lastX = origSquare.first;
+                        lastY = origSquare.second;
+                        rval = std::make_pair(lastX,lastY-1);
                     }
 
                     break;
                 case left_:
                     qDebug()<<"LEFT from LAST SHOT"<<lastX<<lastY;
-//                    if (lastX-1 < 0) break;
+
                     rval = std::make_pair(lastX-1,lastY);
 
-                    while (player2HitorMiss[rval.first][rval.second]!=unknown)
+                    while (player2HitorMiss[rval.first][rval.second]==hit)
                     {
-                        qDebug()<<"INTEDEND SHOT SQUARE ALREADY TAKEN, LEFT AGAIN";
+                        qDebug()<<"INTEDEND SHOT SQUARE ALREADY HIT, LEFT AGAIN";
                         rval.first-=1;
-                        if(player2HitorMiss[rval.first][rval.second]==miss)
+                    }
+
+                    if(player2HitorMiss[rval.first][rval.second]==miss)
+                    {
+                        qDebug()<<"LEFT AGAIN ENCOUNTERED MISS";
+                        reverseCounter++;
+                        if (reverseCounter == 2)
                         {
-                            qDebug()<<"LEFT AGAIN ENCOUNTERED MISS";
-                            reverseDirection();
-                            lastX = origSquare.first;
-                            lastY = origSquare.second;
-                            rval = std::make_pair(lastX+1,lastY);
+                            qDebug()<<"REVERSE COUNTER ==2";
+                            orientation = 0;
+                            reverseCounter = 0;
+                            return generateTargetShot();
                         }
+                        reverseDirection();
+                        lastX = origSquare.first;
+                        lastY = origSquare.second;
+                        rval = std::make_pair(lastX+1,lastY);
                     }
 
                     break;
                 case right_:
                     qDebug()<<"RIGHT from LAST SHOT:"<<lastX<<lastY;
-//                    if (lastX+1 >=10) break;
+
                     rval = std::make_pair(lastX+1,lastY);
 
-                    while (player2HitorMiss[rval.first][rval.second]!=unknown)
+                    while (player2HitorMiss[rval.first][rval.second]==hit)
                     {
-                        qDebug()<<"INTEDEND SHOT SQUARE ALREADY TAKEN, RIGHT AGAIN";
+                        qDebug()<<"INTEDEND SHOT SQUARE ALREADY HIT, RIGHT AGAIN";
                         rval.first+=1;
-                        if(player2HitorMiss[rval.first][rval.second]==miss)
+                    }
+
+                    if(player2HitorMiss[rval.first][rval.second]==miss)
+                    {
+                        qDebug()<<"RIGHT AGAIN ENCOUNTERED MISS";
+                        reverseCounter++;
+                        if (reverseCounter == 2)
                         {
-                            qDebug()<<"RIGHT AGAIN ENCOUNTERED MISS";
-                            reverseDirection();
-                            lastX = origSquare.first;
-                            lastY = origSquare.second;
-                            rval = std::make_pair(lastX-1,lastY);
+                            qDebug()<<"REVERSE COUNTER ==2";
+                            orientation = 0;
+                            reverseCounter = 0;
+                            return generateTargetShot();
                         }
+                        reverseDirection();
+                        lastX = origSquare.first;
+                        lastY = origSquare.second;
+                        rval = std::make_pair(lastX-1,lastY);
                     }
 
                     break;
                 }
                 if (rval.first < 0 || rval.first >= 10 || rval.second < 0 || rval.second >= 10)
                 {
-                    reverseDirection();
-                    lastX = origSquare.first;
-                    lastY = origSquare.second;
+                    reverseCounter++;
+                    if (reverseCounter == 2)
+                    {
+                        qDebug()<<"REVERSE COUNTER ==2";
+                        orientation = 0;
+                        reverseCounter = 0;
+                        return generateTargetShot();
+                    }
+                    else {
+                        reverseDirection();
+                        lastX = origSquare.first;
+                        lastY = origSquare.second;
+                    }
                 }
                 else {
                     done = true;
@@ -288,6 +335,10 @@ private:
             break;
         }
     }
+    QPixmap *leftPegMiss;
+    QPixmap *leftPegHit;
+    QPixmap *rightPegMiss;
+    QPixmap *rightPegHit;
 };
 
 #endif // GAMESCREEN_H
