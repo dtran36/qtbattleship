@@ -35,5 +35,7 @@
         <file>leftPegMiss.png</file>
         <file>rightPegHit.png</file>
         <file>rightPegMiss.png</file>
+        <file>pegRed.png</file>
+        <file>pegWhite.png</file>
     </qresource>
 </RCC>

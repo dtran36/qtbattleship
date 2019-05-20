@@ -147,7 +147,7 @@ private:
             qDebug()<<"ORIENTATION FOUND";
 
             bool done = false;
-            int reverseCounter = 0;
+
             while(!done)
             {
                 switch (currDirection) {
@@ -339,6 +339,11 @@ private:
     QPixmap *leftPegHit;
     QPixmap *rightPegMiss;
     QPixmap *rightPegHit;
+
+    QPixmap *pegRed;
+    QPixmap *pegWhite;
+
+    int reverseCounter = 0;
 };
 
 #endif // GAMESCREEN_H

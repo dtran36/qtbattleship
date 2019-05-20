@@ -28,6 +28,9 @@ GameScreen::GameScreen(QWidget *parent) :
     leftPegHit = new QPixmap(":/pegs/leftPegHit.png");
     rightPegMiss = new QPixmap(":/pegs/rightPegMiss.png");
     rightPegHit = new QPixmap(":/pegs/rightPegHit.png");
+
+    pegRed = new QPixmap(":/pegs/pegRed.png");
+    pegWhite = new QPixmap(":/pegs/pegWhite.png");
 }
 
 void GameScreen::setGrid(int player, const matrix& b)
@@ -56,8 +59,8 @@ void GameScreen::paintEvent(QPaintEvent* event)
         ui->lbl_FingerRight->show();
     }
 
-    const int w = 60;
-    const int h = 60;
+    const int w = 15;
+    const int h = 40;
 
     for(int i =0; i<10; i++)
     {
@@ -87,32 +90,32 @@ void GameScreen::paintEvent(QPaintEvent* event)
             if(player1HitorMiss[i][j]==miss)
             {
                 painter.setBrush(Qt::yellow);
-                QRect box((i*46)+33-24, (j*46)+200-24, w, h);
+                QRect box((i*46)+33+21, (j*46)+200, w, h);
 
-                painter.drawPixmap(box,*leftPegMiss);
+                painter.drawPixmap(box,*pegWhite);
             }
             if(player1HitorMiss[i][j]==hit)
             {
                 painter.setBrush(Qt::red);
-                QRect box((i*46)+33-24, (j*46)+200-24, w, h);
+                QRect box((i*46)+33+21, (j*46)+200, w, h);
 
-                painter.drawPixmap(box,*leftPegHit);
+                painter.drawPixmap(box,*pegRed);
             }
 
             //right board
             if(player2HitorMiss[i][j]==miss)
             {
                 painter.setBrush(Qt::yellow);
-                QRect box((i*46)+533+20, (j*46)+200-24, w, h);
+                QRect box((i*46)+533+17, (j*46)+200, w, h);
 
-                painter.drawPixmap(box,*rightPegMiss);
+                painter.drawPixmap(box,*pegWhite);
             }
             if(player2HitorMiss[i][j]==hit)
             {
                 painter.setBrush(Qt::red);
-                QRect box((i*46)+533+20, (j*46)+200-24, w, h);
+                QRect box((i*46)+533+17, (j*46)+200, w, h);
 
-                painter.drawPixmap(box,*rightPegHit);
+                painter.drawPixmap(box,*pegRed);
             }
         }
     }
@@ -257,7 +260,7 @@ void GameScreen::mousePressEvent(QMouseEvent* event)
                 {
                     if (currDirection!=none)
                     {
-                        //reverseCounter++; //???
+                        reverseCounter++;
                         reverseDirection();
                         lastX = origSquare.first;
                         lastY = origSquare.second;
