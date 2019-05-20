@@ -31,10 +31,6 @@
         <file>destroyer2.png</file>
     </qresource>
     <qresource prefix="/pegs">
-        <file>leftPegHit.png</file>
-        <file>leftPegMiss.png</file>
-        <file>rightPegHit.png</file>
-        <file>rightPegMiss.png</file>
         <file>pegRed.png</file>
         <file>pegWhite.png</file>
     </qresource>
