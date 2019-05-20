@@ -94,7 +94,7 @@
         </property>
         <property name="icon">
          <iconset>
-          <normalon>:/ships/carrier1.png</normalon>
+          <normalon>:/ships/carrier.png</normalon>
          </iconset>
         </property>
         <property name="iconSize">
@@ -165,7 +165,7 @@
         </property>
         <property name="icon">
          <iconset>
-          <normalon>:/ships/battleship1.png</normalon>
+          <normalon>:/ships/battleship.png</normalon>
          </iconset>
         </property>
         <property name="iconSize">
@@ -227,7 +227,7 @@
         </property>
         <property name="icon">
          <iconset>
-          <normalon>:/ships/submarine2.png</normalon>
+          <normalon>:/ships/submarine.png</normalon>
          </iconset>
         </property>
         <property name="iconSize">
@@ -289,7 +289,7 @@
         </property>
         <property name="icon">
          <iconset>
-          <normalon>:/ships/destroyer1.png</normalon>
+          <normalon>:/ships/destroyer.png</normalon>
          </iconset>
         </property>
         <property name="iconSize">
@@ -351,7 +351,7 @@
         </property>
         <property name="icon">
          <iconset>
-          <normalon>:/ships/patrol1.png</normalon>
+          <normalon>:/ships/patrol.png</normalon>
          </iconset>
         </property>
         <property name="iconSize">

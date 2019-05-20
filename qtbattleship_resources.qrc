@@ -1,6 +1,6 @@
 <RCC>
     <qresource prefix="/images">
-        <file>battleship.png</file>
+        <file>battleshipTitle.png</file>
         <file>setupPlayer1.png</file>
         <file>setupPlayer2.png</file>
         <file>versus.png</file>
@@ -19,16 +19,11 @@
         <file>Explosion.wav</file>
     </qresource>
     <qresource prefix="/ships">
-        <file>battleship1.png</file>
-        <file>battleship2.png</file>
-        <file>submarine1.png</file>
-        <file>patrol2.png</file>
-        <file>patrol1.png</file>
-        <file>submarine2.png</file>
-        <file>carrier1.png</file>
-        <file>carrier2.png</file>
-        <file>destroyer1.png</file>
-        <file>destroyer2.png</file>
+        <file>carrier.png</file>
+        <file>submarine.png</file>
+        <file>destroyer.png</file>
+        <file>patrol.png</file>
+        <file>battleship.png</file>
     </qresource>
     <qresource prefix="/pegs">
         <file>pegRed.png</file>
