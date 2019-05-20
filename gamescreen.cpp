@@ -67,26 +67,6 @@ void GameScreen::paintEvent(QPaintEvent* event)
         for(int j=0; j<10; j++)
         {
             //left board
-            if(player1HitorMiss[i][j]!=unknown)
-            {
-                painter.setBrush(Qt::lightGray);
-                QRect box((i*46)+38, (j*46)+200, 46, 46);
-                painter.drawRect(box);
-            }
-            if(player2HitorMiss[i][j]!=unknown)
-            {
-                painter.setBrush(Qt::lightGray);
-                QRect box((i*46)+533, (j*46)+200, 46, 46);
-                painter.drawRect(box);
-            }
-        }
-    }
-
-    for(int i =0; i<10; i++)
-    {
-        for(int j=0; j<10; j++)
-        {
-            //left board
             if(player1HitorMiss[i][j]==miss)
             {
                 painter.setBrush(Qt::yellow);
@@ -96,12 +76,15 @@ void GameScreen::paintEvent(QPaintEvent* event)
             }
             if(player1HitorMiss[i][j]==hit)
             {
+                painter.setBrush(Qt::lightGray);
+                QRect box((i*46)+38, (j*46)+200+36, 46, 10);
+                painter.drawRect(box);
+
                 painter.setBrush(Qt::red);
-                QRect box((i*46)+33+21, (j*46)+200, w, h);
+                QRect pegbox((i*46)+33+21, (j*46)+200, w, h);
 
-                painter.drawPixmap(box,*pegRed);
+                painter.drawPixmap(pegbox,*pegRed);
             }
-
             //right board
             if(player2HitorMiss[i][j]==miss)
             {
@@ -112,10 +95,14 @@ void GameScreen::paintEvent(QPaintEvent* event)
             }
             if(player2HitorMiss[i][j]==hit)
             {
-                painter.setBrush(Qt::red);
-                QRect box((i*46)+533+17, (j*46)+200, w, h);
+                painter.setBrush(Qt::lightGray);
+                QRect box((i*46)+533, (j*46)+200+36, 46, 10);
+                painter.drawRect(box);
 
-                painter.drawPixmap(box,*pegRed);
+                painter.setBrush(Qt::red);
+                QRect pegbox((i*46)+533+17, (j*46)+200, w, h);
+
+                painter.drawPixmap(pegbox,*pegRed);
             }
         }
     }
