@@ -60,7 +60,7 @@ private:
     QFrame *versusSetup1 = nullptr;
     QFrame *versusSetup2 = nullptr;
     QFrame *game = nullptr;
-    npc* bot = nullptr;
+    NPC* bot = nullptr;
     Dialog* dialogGameover = nullptr;
 };
 

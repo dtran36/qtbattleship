@@ -8,12 +8,12 @@
 #include <ctime>
 #include <utility>
 
-class npc : public QObject
+class NPC : public QObject
 {
     Q_OBJECT
 public:
-    explicit npc();
-    ~npc();
+    explicit NPC();
+    ~NPC();
 
     std::pair<int,int> generateHuntingShot();
     std::pair<int,int> generateTargetingShot();

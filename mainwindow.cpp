@@ -13,7 +13,7 @@ MainWindow::MainWindow(QWidget *parent) :
     versusSetup1 = new SetupScreen;
     versusSetup2 = new SetupScreen(2);
     game = new GameScreen;
-    bot = new npc;
+    bot = new NPC;
     dialogGameover = new Dialog;
 
     //add screens to stacked widget
@@ -60,7 +60,7 @@ void MainWindow::resetAll()
     versusSetup1 = new SetupScreen;
     versusSetup2 = new SetupScreen(2);
     game = new GameScreen;
-    bot = new npc;
+    bot = new NPC;
 
     stackedWidget->addWidget(singleplayerSetup);
     stackedWidget->addWidget(versusSetup1);

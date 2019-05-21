@@ -1,6 +1,6 @@
 #include "npc.h"
 
-npc::npc()
+NPC::NPC()
 {
     for(int i =0; i<10; i++)
     {
@@ -16,25 +16,25 @@ npc::npc()
 
     randomize_board();
 }
-npc::~npc()
+NPC::~NPC()
 {
     delete data;
 }
 
-void npc::getnpc()
+void NPC::getnpc()
 {
     data = new matrix(grid);
     emit getdata(2,*data);
 }
 
-const matrix& npc::getdata()
+const matrix& NPC::getdata()
 {
     data = new matrix(grid);
     return *data;
 }
 
 
-bool npc::placeRandom(Ship *newPiece, int newX, int newY)
+bool NPC::placeRandom(Ship *newPiece, int newX, int newY)
 {
     for (int i = 0; i < 5; ++i)
     {
@@ -60,7 +60,7 @@ bool npc::placeRandom(Ship *newPiece, int newX, int newY)
     return true;
 }
 
-void npc::randomize_board()
+void NPC::randomize_board()
 {
     //randomize orientation
     bool horizontal[6] = {}; // true for horizontal
@@ -95,7 +95,7 @@ void npc::randomize_board()
     }
 }
 
-void npc::getOpponentData(int dummy, const matrix &opp)
+void NPC::getOpponentData(int dummy, const matrix &opp)
 {
     oppData = new matrix(opp);
 }
