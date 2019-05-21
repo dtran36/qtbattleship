@@ -288,66 +288,63 @@ void singleplayer::adjustProbGrid(std::pair<int,int> input)
         int x_dir = x;
         int y_dir = y;
 
-        const int prob = effectSize;
+        int minusprob = effectSize*5;
+        switch (i) {
+            case 0: // adjust right
+                for (int j=0; j<effectSize;j++)
+                {
+                    if (x_dir+1 >=10 || probGrid[x_dir+1][y]==0)
+                        break;
+                    if(player2HitorMiss[x][y]==miss)
+                        probGrid[++x_dir][y]-=minusprob;
+                    else
+                        probGrid[++x_dir][y]+=minusprob;
+                    minusprob-=5;
+                }
+                break;
+            case 1: // adjust left
+                for (int j=0; j<effectSize;j++)
+                {
+                    if (x_dir-1 < 0 || probGrid[x_dir-1][y]==0)
+                        break;
+                    if(player2HitorMiss[x][y]==miss)
+                        probGrid[--x_dir][y]-=minusprob;
+                    else {
+                        probGrid[--x_dir][y]+=minusprob;
+                    }
+                    minusprob-=5;
+                }
+                break;
 
-        if(i==1)
-        {
-            int localprob = prob;
-            for (int j=0; j<effectSize;j++)
-            {
-                if (x_dir+1 >=10)
-                    break;
-                if(player2HitorMiss[x][y]==miss)
-                    probGrid[++x_dir][y]-=prob;
-                else {
-                    probGrid[++x_dir][y]+=prob;
+            case 2: // adjust down
+                for (int j=0; j<effectSize;j++)
+                {
+                    if (y_dir+1 >=10 || probGrid[x][y_dir+1]==0)
+                        break;
+                    if(player2HitorMiss[x][y]==miss)
+                        probGrid[x][++y_dir]-=minusprob;
+                    else {
+                        probGrid[x][++y_dir]+=minusprob;
+                    }
+                    minusprob-=5;
                 }
-                localprob--;
-            }
-        }
-        else if(i==2)
-        {
-            int localprob = prob;
-            for (int j=0; j<effectSize;j++)
-            {
-                if (x_dir-1 < 0)
-                    break;
-                if(player2HitorMiss[x][y]==miss)
-                    probGrid[--x_dir][y]-=prob;
-                else {
-                    probGrid[--x_dir][y]+=prob;
+                break;
+
+            case 3: //adjust up
+                for (int j=0; j<effectSize;j++)
+                {
+                    if (y_dir-1 < 0 || probGrid[x][y_dir-1]==0)
+                        break;
+                    if(player2HitorMiss[x][y]==miss)
+                        probGrid[x][--y_dir]-=minusprob;
+                    else {
+                        probGrid[x][--y_dir]+=minusprob;
+                    }
+                    minusprob-=5;
                 }
-                localprob--;
-            }
-        }
-        else if (i==3)
-        {
-            int localprob = prob;
-            for (int j=0; j<effectSize;j++)
-            {
-                if (y_dir+1 >=10)
-                    break;
-                if(player2HitorMiss[x][y]==miss)
-                    probGrid[x][++y_dir]-=prob;
-                else {
-                    probGrid[x][++y_dir]+=prob;
-                }
-                localprob--;
-            }
-        }
-        else {
-            int localprob = prob;
-            for (int j=0; j<effectSize;j++)
-            {
-                if (y_dir-1 < 0)
-                    break;
-                if(player2HitorMiss[x][y]==miss)
-                    probGrid[x][--y_dir]-=prob;
-                else {
-                    probGrid[x][--y_dir]+=prob;
-                }
-                localprob--;
-            }
+                break;
+            default:
+                break;
         }
     }
 }
