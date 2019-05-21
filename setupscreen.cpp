@@ -351,7 +351,7 @@ void SetupScreen::displayWarning()
     QGraphicsOpacityEffect *eff = new QGraphicsOpacityEffect(this);
     ui->Warning->setGraphicsEffect(eff);
     QPropertyAnimation *a = new QPropertyAnimation(eff,"opacity");
-    a->setDuration(2000);
+    a->setDuration(3000);
     a->setStartValue(1);
     a->setEndValue(0);
     a->setEasingCurve(QEasingCurve::OutBack);

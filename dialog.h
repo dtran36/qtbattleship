@@ -12,16 +12,30 @@ class Dialog : public QDialog
     Q_OBJECT
 
 signals:
+    /**
+     * @brief clk_Main Emitted when MainMenu button is clicked.
+     */
     void clk_Main();
+    /**
+     * @brief clk_Quit Emitted when Quit button is clicked.
+     */
     void clk_Quit();
-
-public slots:
-    void slot_hide();
-    void slot_show(const int X);
 
 public:
     explicit Dialog(QWidget *parent = nullptr);
     ~Dialog();
+
+public slots:
+    /**
+     * @brief slot_hide Hides window.
+     */
+    void slot_hide();
+
+    /**
+     * @brief slot_show Shows window with specified winner.
+     * @param X player that won, 1 or 2
+     */
+    void slot_show(const int X);
 
 private slots:
     void on_btn_MainMenu_clicked();
