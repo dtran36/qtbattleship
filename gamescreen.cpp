@@ -12,6 +12,22 @@ GameScreen::GameScreen(QWidget *parent) :
     splash->setSource(QUrl("qrc:/sounds/Splash.wav"));
     splash->setVolume(.6);
 
+    //initial probability for probGrid
+    const int probref[100] = {
+        23,35,44,49,51,51,49,44,35,23,
+        35,46,55,60,62,62,60,55,46,35,
+        44,55,65,69,71,71,69,65,55,44,
+        49,60,69,74,76,76,74,69,60,49,
+        51,62,71,76,78,78,76,71,62,51,
+        51,62,71,76,78,78,76,71,62,51,
+        49,60,69,74,76,76,74,69,60,49,
+        44,55,65,69,71,71,69,65,55,44,
+        35,46,55,60,62,62,60,55,46,35,
+        23,35,44,49,51,51,49,44,35,23
+    };
+
+    int counter = 0;
+
     //initialize hit or miss grids
     for(int i=0; i<10; i++)
     {
@@ -20,7 +36,7 @@ GameScreen::GameScreen(QWidget *parent) :
             player1HitorMiss[i][j]=unknown;
             player2HitorMiss[i][j]=unknown;
 
-            probGrid[i][j]=100;
+            probGrid[i][j]=probref[counter++];
         }
     }
     pegRed = new QPixmap(":/pegs/pegRed.png");
@@ -440,7 +456,7 @@ void GameScreen::adjustProbGrid(std::pair<int,int> input)
     const int x = input.first; //save x value
     const int y = input.second; //save y value
 
-    const int effectSize = 2; // number adjacent squares to adjust
+    const int effectSize = 3; // number adjacent squares to adjust
 
     probGrid[x][y]=0; //set center to 0 probability
 
@@ -454,20 +470,19 @@ void GameScreen::adjustProbGrid(std::pair<int,int> input)
             case 0: // adjust right
                 for (int j=0; j<effectSize;j++)
                 {
-                    if (x_dir+1 >=10)
+                    if (x_dir+1 >=10 || probGrid[x_dir+1][y]==0)
                         break;
                     if(player2HitorMiss[x][y]==miss)
                         probGrid[++x_dir][y]-=minusprob;
-                    else {
+                    else
                         probGrid[++x_dir][y]+=minusprob;
-                    }
                     minusprob-=5;
                 }
                 break;
             case 1: // adjust left
                 for (int j=0; j<effectSize;j++)
                 {
-                    if (x_dir-1 < 0)
+                    if (x_dir-1 < 0 || probGrid[x_dir-1][y]==0)
                         break;
                     if(player2HitorMiss[x][y]==miss)
                         probGrid[--x_dir][y]-=minusprob;
@@ -481,7 +496,7 @@ void GameScreen::adjustProbGrid(std::pair<int,int> input)
             case 2: // adjust down
                 for (int j=0; j<effectSize;j++)
                 {
-                    if (y_dir+1 >=10)
+                    if (y_dir+1 >=10 || probGrid[x][y_dir+1]==0)
                         break;
                     if(player2HitorMiss[x][y]==miss)
                         probGrid[x][++y_dir]-=minusprob;
@@ -495,7 +510,7 @@ void GameScreen::adjustProbGrid(std::pair<int,int> input)
             case 3: //adjust up
                 for (int j=0; j<effectSize;j++)
                 {
-                    if (y_dir-1 < 0)
+                    if (y_dir-1 < 0 || probGrid[x][y_dir-1]==0)
                         break;
                     if(player2HitorMiss[x][y]==miss)
                         probGrid[x][--y_dir]-=minusprob;
