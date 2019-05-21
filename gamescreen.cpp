@@ -577,10 +577,10 @@ std::pair<int,int> GameScreen::generateTargetShot()
 
     if (orientation==0)
     {
+        qDebug()<<"FINDING ORIENTATION";
         if(turnBuffer.empty())
         {
-//            qDebug()<<"Orientation is currently unknown.";
-
+            qDebug()<<"BUFFER IS EMPTY";
             //Search the 4 adjacent squares for highest probability.
             const int arrX[4] = {1,-1,0,0};
             const int arrY[4] = {0,0,-1,1};
@@ -597,15 +597,11 @@ std::pair<int,int> GameScreen::generateTargetShot()
                 turnBuffer.push_back(std::make_pair(probGrid[x][y],std::make_pair(x,y)));
             }
             std::sort(turnBuffer.begin(),turnBuffer.end());
-
-//            for (int i = 0; i < 4; ++i) {
-//                qDebug()<<turnBuffer[i].second.first<<","<<turnBuffer[i].second.second;
-//            }
         }
         rval = turnBuffer[turnBuffer.size()-1].second;
         turnBuffer.pop_back();
     }
-    else //if(orientation!=0)//ORIENTATION FOUND
+    else //ORIENTATION FOUND
     {
         qDebug()<<"ORIENTATION FOUND";
 
