@@ -23,6 +23,10 @@ public:
     ~MainWindow();
 
 public slots:
+    void resetAll();
+
+    void connectAll();
+
     /**
      * @brief switchMainMenu Switches to Main Menu.
      */

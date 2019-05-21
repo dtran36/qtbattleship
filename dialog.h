@@ -25,7 +25,6 @@ public:
 
 private slots:
     void on_btn_MainMenu_clicked();
-
     void on_btn_Quit_clicked();
 
 private:
