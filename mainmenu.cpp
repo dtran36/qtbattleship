@@ -18,7 +18,6 @@ MainMenu::MainMenu(QWidget *parent) :
     frame->setLayout(layout);
     frame->setFixedSize(QSize(1000,690));
     frame->move(-14,0);
-
     frame->lower();
 }
 

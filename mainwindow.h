@@ -8,6 +8,7 @@
 #include "gamescreen.h"
 #include "matrix.h"
 #include "npc.h"
+#include "dialog.h"
 
 namespace Ui {
 class MainWindow;
@@ -56,6 +57,7 @@ private:
     QFrame *versusSetup2 = nullptr;
     QFrame *game = nullptr;
     npc* bot = nullptr;
+    Dialog* dialogGameover = nullptr;
 };
 
 #endif // MAINWINDOW_H

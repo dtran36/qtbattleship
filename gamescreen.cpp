@@ -408,20 +408,20 @@ void GameScreen::checkIfDestroyed()
         if(player1Ships[i]!=0)
             winPlayer2=false;
     }
-    if(winPlayer1){playerXWins(1);}
-    if(winPlayer2){playerXWins(2);}
+    if(winPlayer1){emit playerXWins(1);}
+    if(winPlayer2){emit playerXWins(2);}
 }
 
-void GameScreen::playerXWins(const int x)
-{
-    if(x==1)
-    {
-        ui->lbl_Player2->hide();
-    }
-    else {
-        ui->lbl_Player1->hide();
-    }
-}
+//void GameScreen::playerXWins(const int x)
+//{
+//    if(x==1)
+//    {
+//        ui->lbl_Player2->hide();
+//    }
+//    else {
+//        ui->lbl_Player1->hide();
+//    }
+//}
 
 void GameScreen::setVersus()
 {

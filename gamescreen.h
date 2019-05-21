@@ -23,6 +23,8 @@ class GameScreen;
 class GameScreen : public QFrame
 {
     Q_OBJECT
+signals:
+    void playerXWins(const int x);
 
 public:
     /**
@@ -46,9 +48,6 @@ public:
 public slots:
     void setGrid(int player, const matrix& b);
     void setVersus();
-
-private slots:
-    void playerXWins(const int x);
 
 private:
     Ui::GameScreen *ui;

@@ -14,6 +14,7 @@ MainWindow::MainWindow(QWidget *parent) :
     versusSetup2 = new SetupScreen(2);
     game = new GameScreen;
     bot = new npc;
+    dialogGameover = new Dialog;
 
     //add screens to stacked widget
     stackedWidget = new QStackedWidget;
@@ -44,6 +45,9 @@ MainWindow::MainWindow(QWidget *parent) :
     //connect npc
     connect(singleplayerSetup,SIGNAL(moveNext(int,const matrix&)),bot,SLOT(getnpc()));
     connect(bot,SIGNAL(getdata(int,const matrix&)),game,SLOT(setGrid(int,const matrix&)));
+
+    //connect dialog
+    connect(game,SIGNAL(playerXWins(int)),dialogGameover,SLOT(slot_show(int)));
 
     setCentralWidget(stackedWidget);
 }

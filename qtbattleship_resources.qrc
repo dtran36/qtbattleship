@@ -13,6 +13,8 @@
         <file>player1wins.png</file>
         <file>player2wins.png</file>
         <file>background.jpg</file>
+        <file>MainMenu.png</file>
+        <file>paused.png</file>
     </qresource>
     <qresource prefix="/sounds">
         <file>Splash.wav</file>
