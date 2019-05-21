@@ -7,8 +7,11 @@
 #include<QKeyEvent>
 #include<QPushButton>
 #include"ship.h"
-
 #include"matrix.h"
+
+#include <QGraphicsOpacityEffect>
+#include <QPropertyAnimation>
+#include <QEasingCurve>
 
 namespace Ui {
 class SetupScreen;
@@ -21,7 +24,7 @@ class SetupScreen : public QFrame
 public:
     /**
      * @brief SetupScreen Constructs hidden QDialog window.
-     * @param x which player(1,2) to set QPixmap image
+     * @param x player 1,2 to set QPixmap image
      * @param parent
      */
     explicit SetupScreen(int x=1,QWidget *parent = nullptr);
@@ -105,6 +108,7 @@ private:
      */
     bool tryMove(Ship *newPiece, int newX, int newY);
 
+    void displayWarning();
 
     QPushButton* curButton;//!< the current Ship button pressed, pressing cancel reshows this button
 
@@ -117,14 +121,13 @@ private:
      */
     void focusBoard();
 
-
     bool checkShips [6]={true,false,false,false,false,false}; //!<element true if ShipType is placed
     bool checkSetupDone();
 
     bool currentFocusShips = true; //!<true if currently focusing ships
 
-    int player;
-    matrix *test = nullptr;
+    const int player; //!<player 1 or 2
+    matrix *data = nullptr; //!<data to transfer
 };
 
 #endif // SETUPSCREEN_H
