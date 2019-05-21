@@ -43,6 +43,12 @@ SetupScreen::SetupScreen(int x,QWidget *parent) :
     ui-> pushButton_2 -> setEnabled(false);
 
     ui->Warning->hide();
+
+    ui->pushCarrier->setStyleSheet("border: none;");
+    ui->pushBattleship->setStyleSheet("border: none;");
+    ui->pushSubmarine->setStyleSheet("border: none;");
+    ui->pushDestroyer->setStyleSheet("border: none;");
+    ui->pushPatrol->setStyleSheet("border: none;");
 }
 
 void SetupScreen::on_pushCarrier_clicked()
