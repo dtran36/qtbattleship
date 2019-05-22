@@ -23,8 +23,14 @@ public:
     ~MainWindow();
 
 public slots:
+    /**
+     * @brief resetAll Deletes current SetupScreen, GameScreen, NPC, allocate new instances
+     */
     void resetAll();
 
+    /**
+     * @brief connectAll Reconnects SetupScreen, GameScreen, NPC after new instances
+     */
     void connectAll();
 
     /**

@@ -96,6 +96,5 @@ void MainWindow::switchGameScreen(){stackedWidget->setCurrentIndex(4);}
 
 MainWindow::~MainWindow()
 {
-    //deleting pointers causes crash
     delete ui;
 }
