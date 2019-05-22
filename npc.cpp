@@ -2,15 +2,18 @@
 
 NPC::NPC()
 {
+    //set all elements of grid to empty ShipType
     for(int i =0; i<10; i++)
     {
         for(int j=0; j<10; j++)
         {
-            grid[i][j]=empty; //set all elements of grid to empty ShipType
+            grid[i][j]=empty;
         }
     }
+
     srand(time(0));
 
+    //set initial ship placement position
     curX=0;
     curY=2;
 
@@ -21,16 +24,11 @@ NPC::~NPC()
     delete data;
 }
 
-void NPC::getnpc()
+void NPC::getNPC()
 {
+    //convert grid to matrix
     data = new matrix(grid);
-    emit getdata(2,*data);
-}
-
-const matrix& NPC::getdata()
-{
-    data = new matrix(grid);
-    return *data;
+    emit giveData(2,*data);
 }
 
 
@@ -63,7 +61,7 @@ bool NPC::placeRandom(Ship *newPiece, int newX, int newY)
 void NPC::randomize_board()
 {
     //randomize orientation
-    bool horizontal[6] = {}; // true for horizontal
+    bool horizontal[6]; // true for horizontal
     for (int i =0;i<6;i++)
     {
         horizontal[i] = rand() % 2;
@@ -71,7 +69,7 @@ void NPC::randomize_board()
     const ShipType refarr[6] = {empty,carrier,battleship,submarine,destroyer,patrol};
 
     //randomize placement
-    for (int i =1; i<6;i++) // skip first element(empty ShipType)
+    for (int i =1; i<6;i++)
     {
         curShip = new Ship(refarr[i]);
         if(horizontal[i])
@@ -80,6 +78,8 @@ void NPC::randomize_board()
         bool placed = false;
         int randX = 0;
         int randY = 0;
+
+        //randomize ship's grid position
         while(!placed)
         {
             randX = rand() % 10;
@@ -87,15 +87,12 @@ void NPC::randomize_board()
             placed=placeRandom(curShip,randX, randY);
         }
 
+        //save the position of the squares
         for(int i =0; i<5; i++)
         {
             grid[curX + curShip->x(i)][curY - curShip->y(i)]=curShip->getType();
         }
+
         delete curShip;
     }
-}
-
-void NPC::getOpponentData(int dummy, const matrix &opp)
-{
-    oppData = new matrix(opp);
 }
