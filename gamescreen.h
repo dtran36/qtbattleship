@@ -52,6 +52,11 @@ public slots:
      */
     void setVersus();
 
+private slots:
+    void on_leftSpecial_clicked();
+
+    void on_rightSpecial_clicked();
+
 private:
     Ui::GameScreen *ui;
 
@@ -153,6 +158,9 @@ private:
 
     int player1Consec = 0;
     int player2Consec = 0;
+
+    bool player1Special = false;
+    bool player2Special = false;
 };
 
 #endif // GAMESCREEN_H

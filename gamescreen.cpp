@@ -41,6 +41,11 @@ GameScreen::GameScreen(QWidget *parent) :
     }
     pegRed = new QPixmap(":/pegs/pegRed.png");
     pegWhite = new QPixmap(":/pegs/pegWhite.png");
+
+    ui->leftSpecial->hide();
+    ui->rightSpecial->hide();
+    ui->leftConfirm->hide();
+    ui->rightConfirm->hide();
 }
 
 void GameScreen::setGrid(int player, const matrix& b)
@@ -63,10 +68,21 @@ void GameScreen::paintEvent(QPaintEvent* event)
     {
         ui->lbl_FingerLeft->show();
         ui->lbl_FingerRight->hide();
+
+        if(player1Special)
+        {
+            ui->leftSpecial->show();
+        }
     }
-    else {
+    else //current = player 2
+    {
         ui->lbl_FingerLeft->hide();
         ui->lbl_FingerRight->show();
+
+        if(player2Special)
+        {
+            ui->rightSpecial->show();
+        }
     }
 
     //rect height and width for pixmap
@@ -194,14 +210,17 @@ void GameScreen::mousePressEvent(QMouseEvent* event)
             player1Grid[x_grid_pos][y_grid_pos]=empty;
             player1HitorMiss[x_grid_pos][y_grid_pos]=hit;
             checkIfDestroyed();
-            if(player1Consec == 1)
+            if (versus)
             {
-                //special move
-                qDebug()<<"Versus: Player 1 Special Move Available";
-                player1Consec = 0;
-            }
-            else {
-                player1Consec++;
+                if(player1Consec == 1)
+                {
+                    qDebug()<<"Versus: Player 1 Special Move Available";
+                    player1Special = true;
+                    player1Consec = 0;
+                }
+                else {
+                    player1Consec++;
+                }
             }
         }
         update();
@@ -391,8 +410,8 @@ void GameScreen::mousePressEvent(QMouseEvent* event)
             checkIfDestroyed();
             if(player2Consec == 1)
             {
-                //special move
-                qDebug()<<"Versus: Player 1 Special Move Available";
+                qDebug()<<"Versus: Player 2 Special Move Available";
+                player2Special = true;
                 player2Consec = 0;
             }
             else {
@@ -792,4 +811,20 @@ std::pair<int,int> GameScreen::generateTargetShot()
     lastY = rval.second;
 
     return rval;
+}
+
+void GameScreen::on_leftSpecial_clicked()
+{
+    ui->leftSpecial->hide();
+    qDebug()<<"Left Special Clicked";
+    player1Special = false;
+    update();
+}
+
+void GameScreen::on_rightSpecial_clicked()
+{
+    ui->rightSpecial->hide();
+    qDebug()<<"Right Special Clicked";
+    player2Special = false;
+    update();
 }
