@@ -9,6 +9,7 @@
 #include <QMediaPlayer>
 #include <QSoundEffect>
 #include <vector>
+#include <QCursor>
 
 #include<QDebug>
 
@@ -153,14 +154,23 @@ private:
      */
     void reverseDirection();
 
-    QPixmap *pegRed; //!<Image for hit peg
-    QPixmap *pegWhite; //!<Image for miss peg
+    QPixmap pegRed; //!<Image for hit peg
+    QPixmap pegWhite; //!<Image for miss peg
+
+    QPixmap pixmapCursor;
+    QCursor cursorSpecial;
+
+    int requiredShotsPlayer1 = 2;
+    int requiredShotsPlayer2 = 2;
 
     int player1Consec = 0;
     int player2Consec = 0;
 
     bool player1Special = false;
     bool player2Special = false;
+
+    bool player1NextMoveSpecial = false;
+    bool player2NextMoveSpecial = false;
 };
 
 #endif // GAMESCREEN_H

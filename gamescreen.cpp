@@ -39,8 +39,11 @@ GameScreen::GameScreen(QWidget *parent) :
             probGrid[i][j]=probref[counter++];
         }
     }
-    pegRed = new QPixmap(":/pegs/pegRed.png");
-    pegWhite = new QPixmap(":/pegs/pegWhite.png");
+    pegRed = QPixmap(":/pegs/pegRed.png");
+    pegWhite = QPixmap(":/pegs/pegWhite.png");
+    pixmapCursor = QPixmap(":/images/cursorSpecial.png");
+    pixmapCursor = pixmapCursor.scaled(138,138);
+    cursorSpecial = QCursor(pixmapCursor);
 
     ui->leftSpecial->hide();
     ui->rightSpecial->hide();
@@ -99,7 +102,7 @@ void GameScreen::paintEvent(QPaintEvent* event)
                 painter.setBrush(Qt::yellow);
                 QRect box((i*46)+33+21, (j*46)+200, w, h);
 
-                painter.drawPixmap(box,*pegWhite);
+                painter.drawPixmap(box,pegWhite);
             }
             if(player1HitorMiss[i][j]==hit)
             {
@@ -110,7 +113,7 @@ void GameScreen::paintEvent(QPaintEvent* event)
                 painter.setBrush(Qt::red);
                 QRect pegbox((i*46)+33+21, (j*46)+200, w, h);
 
-                painter.drawPixmap(pegbox,*pegRed);
+                painter.drawPixmap(pegbox,pegRed);
             }
             //right board
             if(player2HitorMiss[i][j]==miss)
@@ -118,7 +121,7 @@ void GameScreen::paintEvent(QPaintEvent* event)
                 painter.setBrush(Qt::yellow);
                 QRect box((i*46)+533+17, (j*46)+200, w, h);
 
-                painter.drawPixmap(box,*pegWhite);
+                painter.drawPixmap(box,pegWhite);
             }
             if(player2HitorMiss[i][j]==hit)
             {
@@ -129,7 +132,7 @@ void GameScreen::paintEvent(QPaintEvent* event)
                 painter.setBrush(Qt::red);
                 QRect pegbox((i*46)+533+17, (j*46)+200, w, h);
 
-                painter.drawPixmap(pegbox,*pegRed);
+                painter.drawPixmap(pegbox,pegRed);
             }
         }
     }
@@ -197,42 +200,75 @@ void GameScreen::mousePressEvent(QMouseEvent* event)
 
         if(player1HitorMiss[x_grid_pos][y_grid_pos]!=unknown) return; //player clicked on known square
 
-        if(player1Grid[x_grid_pos][y_grid_pos]==empty) //player missed
+        QVector<std::pair<int,int>> specialShotsPlayer1;
+
+        specialShotsPlayer1.push_back(std::make_pair(x_grid_pos,y_grid_pos));
+
+        if(player1NextMoveSpecial) //if shot was special shot
         {
-            splash->play();
-            player1HitorMiss[x_grid_pos][y_grid_pos]=miss;
-            player1Consec = 0;
+            const int refX[4] = {1,1,-1,-1};
+            const int refY[4] = {1,-1,1,-1};
+            for (int i = 0; i < 4; ++i) {
+                specialShotsPlayer1.push_back(std::make_pair(x_grid_pos+refX[i],y_grid_pos+refY[i]));
+            }
+            setCursor(QCursor());
         }
-        else //player hit
-        {
-            explosion->play();
-            player2Ships[player1Grid[x_grid_pos][y_grid_pos]]--;
-            player1Grid[x_grid_pos][y_grid_pos]=empty;
-            player1HitorMiss[x_grid_pos][y_grid_pos]=hit;
-            checkIfDestroyed();
-            if (versus)
+
+        bool hitref = false;
+
+        for (int i = 0; i < specialShotsPlayer1.size(); ++i) {
+            int x_grid_pos = specialShotsPlayer1[i].first;
+            int y_grid_pos = specialShotsPlayer1[i].second;
+
+            if(player1HitorMiss[x_grid_pos][y_grid_pos]!=unknown
+                    || x_grid_pos < 0
+                    || x_grid_pos >= 10
+                    || y_grid_pos < 0
+                    || y_grid_pos >= 10)
+                continue;
+
+            if(player1Grid[x_grid_pos][y_grid_pos]==empty) //player missed
             {
-                if(player1Consec == 1)
+                splash->play();
+                player1HitorMiss[x_grid_pos][y_grid_pos]=miss;
+            }
+            else //player hit
+            {
+                explosion->play();
+                player2Ships[player1Grid[x_grid_pos][y_grid_pos]]--;
+                player1Grid[x_grid_pos][y_grid_pos]=empty;
+                player1HitorMiss[x_grid_pos][y_grid_pos]=hit;
+                checkIfDestroyed();
+                hitref = true;
+            }
+        }
+        update();
+        if (versus)//mode is versus
+        {
+            if(player1NextMoveSpecial)
+            {
+                player1NextMoveSpecial = false;
+                currentPlayer = 2;
+                player1Consec = 0;
+                return;
+            }
+            if (hitref == true)
+            {
+                if (player1Consec == requiredShotsPlayer1-1)
                 {
-                    qDebug()<<"Versus: Player 1 Special Move Available";
+                    currentPlayer = 2;
                     player1Special = true;
                     player1Consec = 0;
                 }
                 else {
-                    player1Consec++;
+                    ++player1Consec;
+                    currentPlayer = 1;
                 }
             }
-        }
-        update();
-
-        if (versus)//mode is versus
-        {
-            if(player1Consec == 1)
+            else //did not hit anything
             {
-                currentPlayer = 1;
-            }
-            else {
-                currentPlayer=2;
+                currentPlayer = 2;
+                player1Consec = 0;
             }
         }
         else //NPC turn
@@ -395,37 +431,77 @@ void GameScreen::mousePressEvent(QMouseEvent* event)
 
         if(player2HitorMiss[x_grid_pos][y_grid_pos]!=unknown) return; //clicked on known square
 
-        if(player2Grid[x_grid_pos][y_grid_pos]==empty) //miss
+        QVector<std::pair<int,int>> specialShotsPlayer2;
+
+        specialShotsPlayer2.push_back(std::make_pair(x_grid_pos,y_grid_pos));
+
+        if(player2NextMoveSpecial) //if shot was special shot
         {
-            splash->play();
-            player2HitorMiss[x_grid_pos][y_grid_pos]=miss;
-            player2Consec = 0;
+            const int refX[4] = {1,1,-1,-1};
+            const int refY[4] = {1,-1,1,-1};
+            for (int i = 0; i < 4; ++i) {
+                specialShotsPlayer2.push_back(std::make_pair(x_grid_pos+refX[i],y_grid_pos+refY[i]));
+            }
+            setCursor(QCursor());
         }
-        else //hit
-        {
-            explosion->play();
-            player2Ships[player2Grid[x_grid_pos][y_grid_pos]]--;
-            player2Grid[x_grid_pos][y_grid_pos]=empty;
-            player2HitorMiss[x_grid_pos][y_grid_pos]=hit;
-            checkIfDestroyed();
-            if(player2Consec == 1)
+
+        bool hitref = false;
+
+        for (int i = 0; i < specialShotsPlayer2.size(); ++i) {
+            int x_grid_pos = specialShotsPlayer2[i].first;
+            int y_grid_pos = specialShotsPlayer2[i].second;
+
+            if(player2HitorMiss[x_grid_pos][y_grid_pos]!=unknown
+                    || x_grid_pos < 0
+                    || x_grid_pos >= 10
+                    || y_grid_pos < 0
+                    || y_grid_pos >= 10)
+                continue;
+
+            if(player2Grid[x_grid_pos][y_grid_pos]==empty) //player missed
             {
-                qDebug()<<"Versus: Player 2 Special Move Available";
-                player2Special = true;
-                player2Consec = 0;
+                splash->play();
+                player2HitorMiss[x_grid_pos][y_grid_pos]=miss;
             }
-            else {
-                player2Consec++;
+            else //player hit
+            {
+                explosion->play();
+                player1Ships[player2Grid[x_grid_pos][y_grid_pos]]--;
+                player2Grid[x_grid_pos][y_grid_pos]=empty;
+                player2HitorMiss[x_grid_pos][y_grid_pos]=hit;
+                checkIfDestroyed();
+                hitref = true;
             }
-        }
-        if(player2Consec == 1)
-        {
-            currentPlayer = 2;
-        }
-        else {
-            currentPlayer=1;
         }
         update();
+        if (versus)//mode is versus
+        {
+            if(player2NextMoveSpecial)
+            {
+                player2NextMoveSpecial = false;
+                currentPlayer = 1;
+                player2Consec = 0;
+                return;
+            }
+            if (hitref == true)
+            {
+                if (player2Consec == requiredShotsPlayer2-1)
+                {
+                    currentPlayer = 1;
+                    player2Special = true;
+                    player2Consec = 0;
+                }
+                else {
+                    ++player2Consec;
+                    currentPlayer = 2;
+                }
+            }
+            else //did not hit anything
+            {
+                currentPlayer = 1;
+                player2Consec = 0;
+            }
+        }
     }
 }
 
@@ -818,6 +894,15 @@ void GameScreen::on_leftSpecial_clicked()
     ui->leftSpecial->hide();
     qDebug()<<"Left Special Clicked";
     player1Special = false;
+    player1NextMoveSpecial = true;
+    //increased required consecutive shots
+    if (requiredShotsPlayer1<5)
+    {
+        qDebug()<<"Old required shots, player 1:"<<requiredShotsPlayer1;
+        ++requiredShotsPlayer1;
+        qDebug()<<"New required shots, player 1:"<<requiredShotsPlayer1;
+    }
+    setCursor(cursorSpecial);
     update();
 }
 
@@ -826,5 +911,10 @@ void GameScreen::on_rightSpecial_clicked()
     ui->rightSpecial->hide();
     qDebug()<<"Right Special Clicked";
     player2Special = false;
+    player2NextMoveSpecial = true;
+    //increased required consecutive shots
+    if (requiredShotsPlayer2<5)
+        ++requiredShotsPlayer2;
+    setCursor(cursorSpecial);
     update();
 }
