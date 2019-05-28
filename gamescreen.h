@@ -150,6 +150,9 @@ private:
 
     QPixmap *pegRed; //!<Image for hit peg
     QPixmap *pegWhite; //!<Image for miss peg
+
+    int player1Consec = 0;
+    int player2Consec = 0;
 };
 
 #endif // GAMESCREEN_H

@@ -94,35 +94,35 @@
       <item>
        <widget class="QLabel" name="carrierLeft">
         <property name="text">
-         <string>carrierLeft</string>
+         <string>P1 Carrier</string>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QLabel" name="battleshipLeft">
         <property name="text">
-         <string>battleshipLeft</string>
+         <string>P1 Battleship</string>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QLabel" name="submarineLeft">
         <property name="text">
-         <string>submarineLeft</string>
+         <string>P1 Submarine</string>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QLabel" name="destroyerLeft">
         <property name="text">
-         <string>destroyerLeft</string>
+         <string>P1 Destroyer</string>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QLabel" name="patrolLeft">
         <property name="text">
-         <string>patrolLeft</string>
+         <string>P1 Patrol</string>
         </property>
        </widget>
       </item>
@@ -195,35 +195,35 @@
       <item>
        <widget class="QLabel" name="patrolRight">
         <property name="text">
-         <string>patrolRight</string>
+         <string>P2 Patrol</string>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QLabel" name="destroyerRight">
         <property name="text">
-         <string>destroyerRight</string>
+         <string>P2 Destroyer</string>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QLabel" name="submarineRight">
         <property name="text">
-         <string>submarineRight</string>
+         <string>P2 Submarine</string>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QLabel" name="battleshipRight">
         <property name="text">
-         <string>battleshipRight</string>
+         <string>P2 Battleship</string>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QLabel" name="carrierRight">
         <property name="text">
-         <string>carrierRight</string>
+         <string>P2 Carrier</string>
         </property>
        </widget>
       </item>

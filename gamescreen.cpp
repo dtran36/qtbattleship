@@ -185,6 +185,7 @@ void GameScreen::mousePressEvent(QMouseEvent* event)
         {
             splash->play();
             player1HitorMiss[x_grid_pos][y_grid_pos]=miss;
+            player1Consec = 0;
         }
         else //player hit
         {
@@ -193,12 +194,27 @@ void GameScreen::mousePressEvent(QMouseEvent* event)
             player1Grid[x_grid_pos][y_grid_pos]=empty;
             player1HitorMiss[x_grid_pos][y_grid_pos]=hit;
             checkIfDestroyed();
+            if(player1Consec == 1)
+            {
+                //special move
+                qDebug()<<"Versus: Player 1 Special Move Available";
+                player1Consec = 0;
+            }
+            else {
+                player1Consec++;
+            }
         }
         update();
 
         if (versus)//mode is versus
         {
-            currentPlayer=2;
+            if(player1Consec == 1)
+            {
+                currentPlayer = 1;
+            }
+            else {
+                currentPlayer=2;
+            }
         }
         else //NPC turn
         {
@@ -364,6 +380,7 @@ void GameScreen::mousePressEvent(QMouseEvent* event)
         {
             splash->play();
             player2HitorMiss[x_grid_pos][y_grid_pos]=miss;
+            player2Consec = 0;
         }
         else //hit
         {
@@ -372,8 +389,23 @@ void GameScreen::mousePressEvent(QMouseEvent* event)
             player2Grid[x_grid_pos][y_grid_pos]=empty;
             player2HitorMiss[x_grid_pos][y_grid_pos]=hit;
             checkIfDestroyed();
+            if(player2Consec == 1)
+            {
+                //special move
+                qDebug()<<"Versus: Player 1 Special Move Available";
+                player2Consec = 0;
+            }
+            else {
+                player2Consec++;
+            }
         }
-        currentPlayer=1;
+        if(player2Consec == 1)
+        {
+            currentPlayer = 2;
+        }
+        else {
+            currentPlayer=1;
+        }
         update();
     }
 }
