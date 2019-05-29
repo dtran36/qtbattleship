@@ -8,6 +8,10 @@
 #include "gamescreen.h"
 #include "matrix.h"
 #include "npc.h"
+#include "dialog.h"
+#include <QMediaPlayer>
+#include "instructions.h"
+#include <QTimer>
 
 namespace Ui {
 class MainWindow;
@@ -22,6 +26,16 @@ public:
     ~MainWindow();
 
 public slots:
+    /**
+     * @brief resetAll Deletes current SetupScreen, GameScreen, NPC, allocate new instances
+     */
+    void resetAll();
+
+    /**
+     * @brief connectAll Reconnects SetupScreen, GameScreen, NPC after new instances
+     */
+    void connectAll();
+
     /**
      * @brief switchMainMenu Switches to Main Menu.
      */
@@ -46,8 +60,23 @@ public slots:
      * @brief switchGameScreen Switches to Game Screen.
      */
     void switchGameScreen();
+
+    /**
+     * @brief toggleMusic If music is on -> turn off, vice versa.
+     */
+    void toggleMusic();
+
+    /**
+     * @brief showInstructions Shows instructions once at beginning.
+     */
+    void showInstructions();
+
 private:
     Ui::MainWindow *ui;
+
+    bool mute = false;
+
+    void keyPressEvent(QKeyEvent *event);
 
     QStackedWidget *stackedWidget = nullptr;
     QFrame *firstscreen = nullptr;
@@ -55,7 +84,13 @@ private:
     QFrame *versusSetup1 = nullptr;
     QFrame *versusSetup2 = nullptr;
     QFrame *game = nullptr;
-    npc* bot = nullptr;
+    NPC* bot = nullptr;
+    Dialog* dialogGameover = nullptr;
+
+    Instructions* instructions = nullptr;
+
+    QMediaPlayer* music = nullptr;
+
 };
 
 #endif // MAINWINDOW_H

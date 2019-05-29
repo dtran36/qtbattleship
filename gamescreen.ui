@@ -94,35 +94,35 @@
       <item>
        <widget class="QLabel" name="carrierLeft">
         <property name="text">
-         <string>carrierLeft</string>
+         <string>P1 Carrier</string>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QLabel" name="battleshipLeft">
         <property name="text">
-         <string>battleshipLeft</string>
+         <string>P1 Battleship</string>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QLabel" name="submarineLeft">
         <property name="text">
-         <string>submarineLeft</string>
+         <string>P1 Submarine</string>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QLabel" name="destroyerLeft">
         <property name="text">
-         <string>destroyerLeft</string>
+         <string>P1 Destroyer</string>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QLabel" name="patrolLeft">
         <property name="text">
-         <string>patrolLeft</string>
+         <string>P1 Patrol</string>
         </property>
        </widget>
       </item>
@@ -195,41 +195,108 @@
       <item>
        <widget class="QLabel" name="patrolRight">
         <property name="text">
-         <string>patrolRight</string>
+         <string>P2 Patrol</string>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QLabel" name="destroyerRight">
         <property name="text">
-         <string>destroyerRight</string>
+         <string>P2 Destroyer</string>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QLabel" name="submarineRight">
         <property name="text">
-         <string>submarineRight</string>
+         <string>P2 Submarine</string>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QLabel" name="battleshipRight">
         <property name="text">
-         <string>battleshipRight</string>
+         <string>P2 Battleship</string>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QLabel" name="carrierRight">
         <property name="text">
-         <string>carrierRight</string>
+         <string>P2 Carrier</string>
         </property>
        </widget>
       </item>
      </layout>
     </widget>
    </widget>
+  </widget>
+  <widget class="QPushButton" name="leftSpecial">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>155</y>
+     <width>250</width>
+     <height>35</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>P1 Special</string>
+   </property>
+   <property name="autoDefault">
+    <bool>false</bool>
+   </property>
+   <property name="default">
+    <bool>false</bool>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="rightSpecial">
+   <property name="geometry">
+    <rect>
+     <x>500</x>
+     <y>155</y>
+     <width>250</width>
+     <height>35</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>P2 Special</string>
+   </property>
+   <property name="autoDefault">
+    <bool>false</bool>
+   </property>
+  </widget>
+  <widget class="QLabel" name="lbl_leftSpecial">
+   <property name="geometry">
+    <rect>
+     <x>250</x>
+     <y>155</y>
+     <width>250</width>
+     <height>35</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>P1 Special: Shots Needed = </string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+  </widget>
+  <widget class="QLabel" name="lbl_rightSpecial">
+   <property name="geometry">
+    <rect>
+     <x>750</x>
+     <y>155</y>
+     <width>250</width>
+     <height>35</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>P2 Special: Shots Needed = </string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
   </widget>
  </widget>
  <resources>

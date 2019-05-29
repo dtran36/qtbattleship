@@ -28,6 +28,7 @@ public:
      * @param parent
      */
     explicit SetupScreen(int x=1,QWidget *parent = nullptr);
+
     ~SetupScreen();
 
 
@@ -36,6 +37,11 @@ signals:
      * @brief moveNext All ships placed, move to next widget.
      */
     void moveNext(int playerx, const matrix& m);
+
+    /**
+     * @brief mutePressed Emitted when Key_M pressed
+     */
+    void mutePressed();
 
 private slots:
     void on_pushCarrier_clicked();
@@ -108,6 +114,9 @@ private:
      */
     bool tryMove(Ship *newPiece, int newX, int newY);
 
+    /**
+     * @brief displayWarning Displays warning if user action is restricted.
+     */
     void displayWarning();
 
     QPushButton* curButton;//!< the current Ship button pressed, pressing cancel reshows this button
@@ -122,6 +131,11 @@ private:
     void focusBoard();
 
     bool checkShips [6]={true,false,false,false,false,false}; //!<element true if ShipType is placed
+
+    /**
+     * @brief checkSetupDone Check if all ships placed.
+     * @return True if all ships placed.
+     */
     bool checkSetupDone();
 
     bool currentFocusShips = true; //!<true if currently focusing ships

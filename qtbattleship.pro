@@ -25,7 +25,9 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++11
 
 SOURCES += \
+        dialog.cpp \
         gamescreen.cpp \
+        instructions.cpp \
         main.cpp \
         mainmenu.cpp \
         mainwindow.cpp \
@@ -35,7 +37,9 @@ SOURCES += \
         ship.cpp
 
 HEADERS += \
+        dialog.h \
         gamescreen.h \
+        instructions.h \
         mainmenu.h \
         mainwindow.h \
         matrix.h \
@@ -44,7 +48,9 @@ HEADERS += \
         ship.h
 
 FORMS += \
+        dialog.ui \
         gamescreen.ui \
+        instructions.ui \
         mainmenu.ui \
         mainwindow.ui \
         setupscreen.ui

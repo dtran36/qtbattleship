@@ -185,6 +185,18 @@ void SetupScreen::keyPressEvent(QKeyEvent *event)
     if(currentFocusShips) return; // if no ship current selected return
     switch (event->key())
     {
+        case Qt::Key_M:
+            emit mutePressed();
+            break;
+        case Qt::Key_R:
+            curShip->rotate(); // rotate by changing curShip's squares' positions
+            if(!tryMove(curShip,curX,curY))
+            {
+                curShip->rotate();
+                ui->Warning->setText("Not enough space to rotate!");
+                displayWarning();
+            }; // if out of bounds, rotate to original position
+            break;
         case Qt::Key_Left:
             tryMove(curShip, curX-1,curY);
             break;
@@ -197,19 +209,9 @@ void SetupScreen::keyPressEvent(QKeyEvent *event)
         case Qt::Key_Up:
             tryMove(curShip, curX,curY-1);
             break;
-        case Qt::Key_R:
-            curShip->rotate(); // rotate by changing curShip's squares' positions
-            if(!tryMove(curShip,curX,curY))
-            {
-                curShip->rotate();
-                ui->Warning->setText("Not enough space to rotate!");
-                displayWarning();
-            }; // if out of bounds, rotate to original position
-            break;
         case Qt::Key_Space: //shortcut for confirm button
             confirmPlacement();
             break;
-
         case Qt::Key_Escape:
             cancelPlacement();
             break;
@@ -351,7 +353,7 @@ void SetupScreen::displayWarning()
     QGraphicsOpacityEffect *eff = new QGraphicsOpacityEffect(this);
     ui->Warning->setGraphicsEffect(eff);
     QPropertyAnimation *a = new QPropertyAnimation(eff,"opacity");
-    a->setDuration(2000);
+    a->setDuration(3000);
     a->setStartValue(1);
     a->setEndValue(0);
     a->setEasingCurve(QEasingCurve::OutBack);
