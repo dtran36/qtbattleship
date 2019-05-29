@@ -20,8 +20,3 @@ void Instructions::on_pushButton_clicked()
 {
     this->hide();
 }
-
-void Instructions::showInstructions()
-{
-    this->show();
-}

@@ -60,12 +60,22 @@ public slots:
     void setVersus();
 
 private slots:
+    /**
+     * @brief on_leftSpecial_clicked Turns next player 1 shot to a special shot.
+     */
     void on_leftSpecial_clicked();
+    /**
+     * @brief on_rightSpecial_clicked Turns next player 2 shot to a special shot.
+     */
     void on_rightSpecial_clicked();
 
 private:
     Ui::GameScreen *ui;
 
+    /**
+     * @brief keyPressEvent Only used to toggle music.
+     * @param event
+     */
     void keyPressEvent(QKeyEvent *event) override;
 
     /**
@@ -164,19 +174,19 @@ private:
     QPixmap pegRed; //!<Image for hit peg
     QPixmap pegWhite; //!<Image for miss peg
 
-    QPixmap pixmapCursor;
-    QCursor cursorSpecial;
+    QPixmap pixmapCursor; //!<Image for special cursor
+    QCursor cursorSpecial; //!<Special cursor
 
-    int requiredShotsPlayer1 = 2;
+    int requiredShotsPlayer1 = 2; //!<Consecutive shots required to activate special
     int requiredShotsPlayer2 = 2;
 
-    int player1Consec = 0;
+    int player1Consec = 0; //!<Current consecutive shots
     int player2Consec = 0;
 
-    bool player1Special = false;
+    bool player1Special = false; //!<True if player's special is available
     bool player2Special = false;
 
-    bool player1NextMoveSpecial = false;
+    bool player1NextMoveSpecial = false; //!<True if player's next shot is special
     bool player2NextMoveSpecial = false;
 };
 

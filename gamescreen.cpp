@@ -236,7 +236,7 @@ void GameScreen::mousePressEvent(QMouseEvent* event)
             setCursor(QCursor());
         }
 
-        bool hitref = false;
+        bool hitref = false; // true if one shot hits
 
         for (int i = 0; i < specialShotsPlayer1.size(); ++i) {
             int x_grid_pos = specialShotsPlayer1[i].first;
@@ -267,14 +267,14 @@ void GameScreen::mousePressEvent(QMouseEvent* event)
         update();
         if (versus)//mode is versus
         {
-            if(player1NextMoveSpecial)
+            if(player1NextMoveSpecial) //if was special move, immediately go to other player (no consecutive hits)
             {
                 player1NextMoveSpecial = false;
                 currentPlayer = 2;
                 player1Consec = 0;
                 return;
             }
-            if (hitref == true)
+            if (hitref == true) //if one shot hit
             {
                 if (player1Consec == requiredShotsPlayer1-1)
                 {
@@ -287,7 +287,7 @@ void GameScreen::mousePressEvent(QMouseEvent* event)
                     currentPlayer = 1;
                 }
             }
-            else //did not hit anything
+            else //did not hit anything, switch to other player
             {
                 currentPlayer = 2;
                 player1Consec = 0;
@@ -443,7 +443,7 @@ void GameScreen::mousePressEvent(QMouseEvent* event)
             update();
         }
     }
-    else //not in versus mode, 2nd player's turn
+    else //not in versus mode, 2nd player's turn --> implementation mirrors player 1's code
     {
         if(click_x<535 ||click_y<200 || click_y>660) return; //click was outside of the grid
         int x_grid_pos = (click_x - 534) /46;
