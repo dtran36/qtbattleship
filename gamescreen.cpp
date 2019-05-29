@@ -47,8 +47,8 @@ GameScreen::GameScreen(QWidget *parent) :
 
     ui->leftSpecial->hide();
     ui->rightSpecial->hide();
-    ui->leftConfirm->hide();
-    ui->rightConfirm->hide();
+    ui->lbl_leftSpecial->hide();
+    ui->lbl_rightSpecial->hide();
 }
 
 void GameScreen::setGrid(int player, const matrix& b)
@@ -70,7 +70,16 @@ void GameScreen::paintEvent(QPaintEvent* event)
     if(currentPlayer==1)
     {
         ui->lbl_FingerLeft->show();
+
         ui->lbl_FingerRight->hide();
+        ui->lbl_rightSpecial->hide();
+
+        if(!player1Special)
+        {
+            ui->lbl_leftSpecial->show();
+            QString s = QString::number(requiredShotsPlayer1-player1Consec);
+            ui->lbl_leftSpecial->setText("P1 Special: Shots Needed = "+s);
+        }
 
         if(player1Special)
         {
@@ -79,8 +88,17 @@ void GameScreen::paintEvent(QPaintEvent* event)
     }
     else //current = player 2
     {
-        ui->lbl_FingerLeft->hide();
         ui->lbl_FingerRight->show();
+
+        ui->lbl_FingerLeft->hide();
+        ui->lbl_leftSpecial->hide();
+
+        if(!player2Special)
+        {
+            ui->lbl_rightSpecial->show();
+            QString s = QString::number(requiredShotsPlayer2-player2Consec);
+            ui->lbl_rightSpecial->setText("P2 Special: Shots Needed = "+s);
+        }
 
         if(player2Special)
         {
@@ -898,9 +916,7 @@ void GameScreen::on_leftSpecial_clicked()
     //increased required consecutive shots
     if (requiredShotsPlayer1<5)
     {
-        qDebug()<<"Old required shots, player 1:"<<requiredShotsPlayer1;
         ++requiredShotsPlayer1;
-        qDebug()<<"New required shots, player 1:"<<requiredShotsPlayer1;
     }
     setCursor(cursorSpecial);
     update();

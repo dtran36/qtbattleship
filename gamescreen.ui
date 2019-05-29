@@ -266,7 +266,7 @@
     <bool>false</bool>
    </property>
   </widget>
-  <widget class="QPushButton" name="leftConfirm">
+  <widget class="QLabel" name="lbl_leftSpecial">
    <property name="geometry">
     <rect>
      <x>250</x>
@@ -276,13 +276,13 @@
     </rect>
    </property>
    <property name="text">
-    <string>P2 Confirm</string>
+    <string>P1 Special: Shots Needed = </string>
    </property>
-   <property name="autoDefault">
-    <bool>false</bool>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
    </property>
   </widget>
-  <widget class="QPushButton" name="rightConfirm">
+  <widget class="QLabel" name="lbl_rightSpecial">
    <property name="geometry">
     <rect>
      <x>750</x>
@@ -292,10 +292,10 @@
     </rect>
    </property>
    <property name="text">
-    <string>P2 Confirm</string>
+    <string>P2 Special: Shots Needed = </string>
    </property>
-   <property name="autoDefault">
-    <bool>false</bool>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
    </property>
   </widget>
  </widget>
