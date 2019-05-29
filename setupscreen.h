@@ -38,6 +38,11 @@ signals:
      */
     void moveNext(int playerx, const matrix& m);
 
+    /**
+     * @brief mutePressed Emitted when Key_M pressed
+     */
+    void mutePressed();
+
 private slots:
     void on_pushCarrier_clicked();
     void on_pushBattleship_clicked();

@@ -64,6 +64,12 @@ void MainWindow::connectAll()
     connect(game,SIGNAL(playerXWins(int)),dialogGameover,SLOT(slot_show(int)));
     connect(dialogGameover,SIGNAL(clk_Main()),this,SLOT(resetAll()));
     connect(dialogGameover,SIGNAL(clk_Main()),this,SLOT(switchMainMenu()));
+
+    //connect: Toggle mute
+    connect(versusSetup1,SIGNAL(mutePressed()),this,SLOT(toggleMusic()));
+    connect(versusSetup2,SIGNAL(mutePressed()),this,SLOT(toggleMusic()));
+    connect(singleplayerSetup,SIGNAL(mutePressed()),this,SLOT(toggleMusic()));
+    connect(game,SIGNAL(mutePressed()),this,SLOT(toggleMusic()));
 }
 
 void MainWindow::resetAll()
@@ -103,11 +109,11 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
 {
     if (event->key() == Qt::Key_M)
     {
-        muteMusic();
+        toggleMusic();
     }
 }
 
-void MainWindow::muteMusic()
+void MainWindow::toggleMusic()
 {
     if(!mute)
     {

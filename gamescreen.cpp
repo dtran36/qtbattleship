@@ -9,8 +9,9 @@ GameScreen::GameScreen(QWidget *parent) :
     explosion = new QSoundEffect(this);
     splash = new QSoundEffect(this);
     explosion->setSource(QUrl("qrc:/sounds/Explosion.wav"));
+    explosion->setVolume(.2);
     splash->setSource(QUrl("qrc:/sounds/Splash.wav"));
-    splash->setVolume(.6);
+    splash->setVolume(.1);
 
     //initial probability for probGrid
     const int probref[100] = {
@@ -74,17 +75,20 @@ void GameScreen::paintEvent(QPaintEvent* event)
         ui->lbl_FingerRight->hide();
         ui->lbl_rightSpecial->hide();
 
-        if(!player1Special)
+        if (versus)
         {
-            ui->lbl_leftSpecial->show();
-            QString s = QString::number(requiredShotsPlayer1-player1Consec);
-            ui->lbl_leftSpecial->setText("P1 Special: Shots Needed = "+s);
+            if(!player1Special)
+            {
+                ui->lbl_leftSpecial->show();
+                QString s = QString::number(requiredShotsPlayer1-player1Consec);
+                ui->lbl_leftSpecial->setText("P1 Special: Shots Needed = "+s);
+            }
+            if(player1Special)
+            {
+                ui->leftSpecial->show();
+            }
         }
 
-        if(player1Special)
-        {
-            ui->leftSpecial->show();
-        }
     }
     else //current = player 2
     {
@@ -343,7 +347,6 @@ void GameScreen::mousePressEvent(QMouseEvent* event)
 
             if(player2Grid[x_grid_pos][y_grid_pos]==empty) //NPC missed
             {
-                splash->play();
                 player2HitorMiss[x_grid_pos][y_grid_pos]=miss;
 
                 if(targetMode) //NPC was aiming at target and missed
@@ -364,7 +367,6 @@ void GameScreen::mousePressEvent(QMouseEvent* event)
             }
             else //NPC hit
             {
-                explosion->play();
                 player1Ships[player2Grid[x_grid_pos][y_grid_pos]]--;
                 player2Grid[x_grid_pos][y_grid_pos]=empty;
                 player2HitorMiss[x_grid_pos][y_grid_pos]=hit;
@@ -933,4 +935,10 @@ void GameScreen::on_rightSpecial_clicked()
         ++requiredShotsPlayer2;
     setCursor(cursorSpecial);
     update();
+}
+
+void GameScreen::keyPressEvent(QKeyEvent *event)
+{
+    if(event->key()==Qt::Key_M)
+        emit mutePressed();
 }

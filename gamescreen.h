@@ -10,6 +10,7 @@
 #include <QSoundEffect>
 #include <vector>
 #include <QCursor>
+#include <QKeyEvent>
 
 #include<QDebug>
 
@@ -30,6 +31,11 @@ signals:
      * @param x player that won, 1 or 2
      */
     void playerXWins(const int x);
+
+    /**
+     * @brief mutePressed Emitted when Key_M pressed
+     */
+    void mutePressed();
 
 public:
     /**
@@ -55,11 +61,12 @@ public slots:
 
 private slots:
     void on_leftSpecial_clicked();
-
     void on_rightSpecial_clicked();
 
 private:
     Ui::GameScreen *ui;
+
+    void keyPressEvent(QKeyEvent *event) override;
 
     /**
      * @brief paintEvent Paints board based on player actions
