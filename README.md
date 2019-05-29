@@ -1,8 +1,8 @@
-QT BATTLESHIP
-Game Modes:
+#QT BATTLESHIP
+#Game Modes:
 Singleplayer: Test your skills against an NPC, normal battleship rules.
 Versus: Challenge a friend to a naval battle, special rules.
-Instructions:
+#Instructions:
 1. Setup your ships: 
 Select a ship from the left, then use the arrow keys to move the ship to the 
 desired position. Press Space to confirm the placement, or Press Escape to 
