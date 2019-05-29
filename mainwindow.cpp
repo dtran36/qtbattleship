@@ -16,6 +16,11 @@ MainWindow::MainWindow(QWidget *parent) :
     bot = new NPC;
     dialogGameover = new Dialog;
 
+    music = new QMediaPlayer();
+    music->setMedia(QUrl("qrc:/sounds/Music.mp3"));
+    music->setVolume(2);
+    music->play();
+
     //add screens to stacked widget
     stackedWidget = new QStackedWidget;
     stackedWidget->addWidget(firstscreen);
@@ -93,6 +98,27 @@ void MainWindow::switchSingleplayerSetup(){stackedWidget->setCurrentIndex(1);}
 void MainWindow::switchSetup1(){stackedWidget->setCurrentIndex(2);}
 void MainWindow::switchSetup2(){stackedWidget->setCurrentIndex(3);}
 void MainWindow::switchGameScreen(){stackedWidget->setCurrentIndex(4);}
+
+void MainWindow::keyPressEvent(QKeyEvent *event)
+{
+    if (event->key() == Qt::Key_M)
+    {
+        muteMusic();
+    }
+}
+
+void MainWindow::muteMusic()
+{
+    if(!mute)
+    {
+        music->pause();
+        mute = true;
+    }
+    else {
+        music->play();
+        mute = false;
+    }
+}
 
 MainWindow::~MainWindow()
 {

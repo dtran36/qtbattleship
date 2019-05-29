@@ -9,6 +9,7 @@
 #include "matrix.h"
 #include "npc.h"
 #include "dialog.h"
+#include <QMediaPlayer>
 
 namespace Ui {
 class MainWindow;
@@ -57,8 +58,18 @@ public slots:
      * @brief switchGameScreen Switches to Game Screen.
      */
     void switchGameScreen();
+
+    /**
+     * @brief toggleMusic If music is on -> turn off, vice versa.
+     */
+    void toggleMusic();
+
 private:
     Ui::MainWindow *ui;
+
+    bool mute = false;
+
+    void keyPressEvent(QKeyEvent *event);
 
     QStackedWidget *stackedWidget = nullptr;
     QFrame *firstscreen = nullptr;
@@ -68,6 +79,9 @@ private:
     QFrame *game = nullptr;
     NPC* bot = nullptr;
     Dialog* dialogGameover = nullptr;
+
+    QMediaPlayer* music = nullptr;
+
 };
 
 #endif // MAINWINDOW_H

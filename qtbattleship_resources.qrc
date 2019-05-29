@@ -20,6 +20,7 @@
     <qresource prefix="/sounds">
         <file>Splash.wav</file>
         <file>Explosion.wav</file>
+        <file>Music.mp3</file>
     </qresource>
     <qresource prefix="/ships">
         <file>carrier.png</file>
