@@ -10,6 +10,8 @@
 #include "npc.h"
 #include "dialog.h"
 #include <QMediaPlayer>
+#include "instructions.h"
+#include <QTimer>
 
 namespace Ui {
 class MainWindow;
@@ -64,6 +66,11 @@ public slots:
      */
     void toggleMusic();
 
+    /**
+     * @brief showInstructions Shows instructions once at beginning.
+     */
+    void showInstructions();
+
 private:
     Ui::MainWindow *ui;
 
@@ -79,6 +86,8 @@ private:
     QFrame *game = nullptr;
     NPC* bot = nullptr;
     Dialog* dialogGameover = nullptr;
+
+    Instructions* instructions = nullptr;
 
     QMediaPlayer* music = nullptr;
 

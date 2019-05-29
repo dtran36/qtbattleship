@@ -8,13 +8,14 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
 
     //initialize member data
-    firstscreen = new MainMenu;
-    singleplayerSetup = new SetupScreen;
-    versusSetup1 = new SetupScreen;
-    versusSetup2 = new SetupScreen(2);
-    game = new GameScreen;
+    firstscreen = new MainMenu(this);
+    singleplayerSetup = new SetupScreen(1,this);
+    versusSetup1 = new SetupScreen(1,this);
+    versusSetup2 = new SetupScreen(2,this);
+    game = new GameScreen(this);
     bot = new NPC;
     dialogGameover = new Dialog;
+    instructions = new Instructions;
 
     music = new QMediaPlayer();
     music->setMedia(QUrl("qrc:/sounds/Music.mp3"));
@@ -40,6 +41,8 @@ MainWindow::MainWindow(QWidget *parent) :
     connectAll();
 
     setCentralWidget(stackedWidget);
+
+    QTimer::singleShot(1000, this, SLOT(showInstructions()));
 }
 
 void MainWindow::connectAll()
@@ -85,10 +88,10 @@ void MainWindow::resetAll()
     delete game;
     delete bot;
 
-    singleplayerSetup = new SetupScreen;
-    versusSetup1 = new SetupScreen;
-    versusSetup2 = new SetupScreen(2);
-    game = new GameScreen;
+    singleplayerSetup = new SetupScreen(1,this);
+    versusSetup1 = new SetupScreen(1,this);
+    versusSetup2 = new SetupScreen(2,this);
+    game = new GameScreen(this);
     bot = new NPC;
 
     stackedWidget->addWidget(singleplayerSetup);
@@ -124,6 +127,11 @@ void MainWindow::toggleMusic()
         music->play();
         mute = false;
     }
+}
+
+void MainWindow::showInstructions()
+{
+    instructions->show();
 }
 
 MainWindow::~MainWindow()

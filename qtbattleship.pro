@@ -27,6 +27,7 @@ CONFIG += c++11
 SOURCES += \
         dialog.cpp \
         gamescreen.cpp \
+        instructions.cpp \
         main.cpp \
         mainmenu.cpp \
         mainwindow.cpp \
@@ -38,6 +39,7 @@ SOURCES += \
 HEADERS += \
         dialog.h \
         gamescreen.h \
+        instructions.h \
         mainmenu.h \
         mainwindow.h \
         matrix.h \
@@ -48,6 +50,7 @@ HEADERS += \
 FORMS += \
         dialog.ui \
         gamescreen.ui \
+        instructions.ui \
         mainmenu.ui \
         mainwindow.ui \
         setupscreen.ui
