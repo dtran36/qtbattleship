@@ -16,8 +16,10 @@ public:
     ~Instructions();
 
 private slots:
+    /**
+     * @brief on_pushButton_clicked Hides instructions when "Close" button is pressed.
+     */
     void on_pushButton_clicked();
-    void showInstructions();
 
 private:
     Ui::Instructions *ui;

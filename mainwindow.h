@@ -74,23 +74,29 @@ public slots:
 private:
     Ui::MainWindow *ui;
 
-    bool mute = false;
+    bool mute = false; //!<true if music is muted
 
+    /**
+     * @brief keyPressEvent Used to toggle music.
+     * @param event
+     */
     void keyPressEvent(QKeyEvent *event);
 
-    QStackedWidget *stackedWidget = nullptr;
-    QFrame *firstscreen = nullptr;
-    QFrame *singleplayerSetup = nullptr;
-    QFrame *versusSetup1 = nullptr;
+
+    QStackedWidget *stackedWidget = nullptr;//!<central widget
+    QFrame *firstscreen = nullptr;//!<welcome screen
+    QFrame *singleplayerSetup = nullptr; //!<used for singleplayer mode
+    QFrame *versusSetup1 = nullptr;//!<used for versus mode
     QFrame *versusSetup2 = nullptr;
-    QFrame *game = nullptr;
-    NPC* bot = nullptr;
-    Dialog* dialogGameover = nullptr;
+    QFrame *game = nullptr;//!<both modes use same GameScreen
 
-    Instructions* instructions = nullptr;
+    NPC* bot = nullptr;//!<Class used to generate random board
 
-    QMediaPlayer* music = nullptr;
+    Dialog* dialogGameover = nullptr;//!<Shows when game is over
 
+    Instructions* instructions = nullptr;//!<Show once at the start of the program
+
+    QMediaPlayer* music = nullptr;//!<music plays through the entire game
 };
 
 #endif // MAINWINDOW_H
