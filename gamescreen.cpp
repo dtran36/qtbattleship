@@ -75,6 +75,8 @@ void GameScreen::paintEvent(QPaintEvent* event)
         ui->lbl_FingerRight->hide();
         ui->lbl_rightSpecial->hide();
 
+        ui->rightSpecial->hide();
+
         if (versus)
         {
             if(!player1Special)
@@ -82,6 +84,7 @@ void GameScreen::paintEvent(QPaintEvent* event)
                 ui->lbl_leftSpecial->show();
                 QString s = QString::number(requiredShotsPlayer1-player1Consec);
                 ui->lbl_leftSpecial->setText("P1 Special: Shots Needed = "+s);
+                ui->leftSpecial->hide();
             }
             if(player1Special)
             {
@@ -96,6 +99,8 @@ void GameScreen::paintEvent(QPaintEvent* event)
 
         ui->lbl_FingerLeft->hide();
         ui->lbl_leftSpecial->hide();
+
+        ui->leftSpecial->hide();
 
         if(!player2Special)
         {
