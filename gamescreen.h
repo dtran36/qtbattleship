@@ -12,8 +12,6 @@
 #include <QCursor>
 #include <QKeyEvent>
 
-#include<QDebug>
-
 enum HitorMiss{unknown, hit, miss};
 
 enum direction{none,up,down,left_,right_};

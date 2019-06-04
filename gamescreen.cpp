@@ -304,12 +304,12 @@ void GameScreen::mousePressEvent(QMouseEvent* event)
 
             if (targetMode) //target mode is true
             {
-                qDebug()<<"GENERATING TARGET SHOT";
+                //qDebug()<<"GENERATING TARGET SHOT";
                 shot = generateTargetShot();
             }
             else //target mode is false, search shot
             {
-                qDebug()<<"GENERATING NORMAL SHOT";
+                //qDebug()<<"GENERATING NORMAL SHOT";
                 shot = generateSearchShot();
             }
 
@@ -318,7 +318,7 @@ void GameScreen::mousePressEvent(QMouseEvent* event)
 
             if(player2HitorMiss[x_grid_pos][y_grid_pos]!=unknown) //AI chose known square
             {
-                qDebug()<<"NOTE: FIRING AT KNOWN POSITION!";
+                //qDebug()<<"NOTE: FIRING AT KNOWN POSITION!";
 
                 std::vector<std::pair<int,std::pair<int,int>>> tempBuffer;
                 const int arrX[8] = {1,-1,0,0,-1,1,-1,1};
@@ -340,7 +340,7 @@ void GameScreen::mousePressEvent(QMouseEvent* event)
                 //return the closest unknown shot
                 if (tempBuffer.empty())
                 {
-                    qDebug()<<"ERROR: EMPTY TEMP BUFFER";
+                    //qDebug()<<"ERROR: EMPTY TEMP BUFFER";
                 }
                 else {
                     shot = tempBuffer[tempBuffer.size()-1].second;
@@ -384,7 +384,7 @@ void GameScreen::mousePressEvent(QMouseEvent* event)
                 {
                     if(lastShotSunk) //shot hit and sunk the target, search for new target
                     {
-                        qDebug()<<"SWITCHING TO SEARCH MODE";
+                        //qDebug()<<"SWITCHING TO SEARCH MODE";
                         targetMode = false;
                         lastShotSunk = false;
                     }
@@ -418,27 +418,27 @@ void GameScreen::mousePressEvent(QMouseEvent* event)
                                     currDirection = left_;
                                 }
                             }
-                            qDebug()<<"DIRECTION IS:"<<currDirection;
+                            //qDebug()<<"DIRECTION IS:"<<currDirection;
                         }
                     }
                 }
                 else //NPC was not in target mode and hit (new first hit)
                 {
-                    qDebug()<<"NEW FIRST HIT:("<<origSquare.first<<","<<origSquare.second<<")";
+                    //qDebug()<<"NEW FIRST HIT:("<<origSquare.first<<","<<origSquare.second<<")";
                     if(lastShotSunk) //the first hit sunk the ship
                     {
-                        qDebug()<<"FIRST HIT SUNK, SWITCHING TO SEARCHING MODE";
+                        //qDebug()<<"FIRST HIT SUNK, SWITCHING TO SEARCHING MODE";
                         targetMode = false;
                         lastShotSunk = false;
                     }
                     else //first hit did not sink ship, carry on normally
                     {
-                        qDebug()<<"SWITCHING TO TARGETING MODE";
+                        //qDebug()<<"SWITCHING TO TARGETING MODE";
                         targetMode = true;
                         setOrigSquare(shot);
                         lastX = shot.first;
                         lastY = shot.second;
-                        qDebug()<<"CLEARING TURN BUFFER";
+                        //qDebug()<<"CLEARING TURN BUFFER";
                         turnBuffer.clear();
                     }
                 }
@@ -691,22 +691,22 @@ void GameScreen::reverseDirection()
 {
     switch (currDirection) {
     case none:
-        qDebug()<<"ERROR: GAMESCREEN CPP, NPC MISS";
+        //qDebug()<<"ERROR: GAMESCREEN CPP, NPC MISS";
         break;
     case up:
-        qDebug()<<"SWITCHED DIRECTION U->D";
+        //qDebug()<<"SWITCHED DIRECTION U->D";
         currDirection = down;
         break;
     case down:
-        qDebug()<<"SWITCHED DIRECTION D->U";
+        //qDebug()<<"SWITCHED DIRECTION D->U";
         currDirection = up;
         break;
     case left_:
-        qDebug()<<"SWITCHED DIRECTION L->R";
+        //qDebug()<<"SWITCHED DIRECTION L->R";
         currDirection = right_;
         break;
     case right_:
-        qDebug()<<"SWITCHED DIRECTION R->L";
+        //qDebug()<<"SWITCHED DIRECTION R->L";
         currDirection = left_;
         break;
     }
@@ -714,7 +714,7 @@ void GameScreen::reverseDirection()
 
 void GameScreen::setOrigSquare(std::pair<int,int> newFirstHit)
 {
-    qDebug()<<"SETTING NEW OG SQUARE";
+    //qDebug()<<"SETTING NEW OG SQUARE";
     origSquare = newFirstHit;
     orientation = 0;
     currDirection = none;
@@ -733,10 +733,10 @@ std::pair<int,int> GameScreen::generateTargetShot()
 
     if (orientation==0) //orientation currently not found
     {
-        qDebug()<<"FINDING ORIENTATION";
+        //qDebug()<<"FINDING ORIENTATION";
         if(turnBuffer.empty())
         {
-            qDebug()<<"BUFFER IS EMPTY";
+            //qDebug()<<"BUFFER IS EMPTY";
             //Search the 4 adjacent squares for highest probability.
             const int arrX[4] = {1,-1,0,0};
             const int arrY[4] = {0,0,-1,1};
@@ -759,7 +759,7 @@ std::pair<int,int> GameScreen::generateTargetShot()
     }
     else //orientation currently found
     {
-        qDebug()<<"ORIENTATION FOUND";
+        //qDebug()<<"ORIENTATION FOUND";
 
         bool done = false;
 
@@ -768,26 +768,26 @@ std::pair<int,int> GameScreen::generateTargetShot()
             switch (currDirection) //generates shot in the general direction
             {
             case none:
-                qDebug()<<"ERROR: NO DIRECTION";
+                //qDebug()<<"ERROR: NO DIRECTION";
                 break;
             case up:
-                qDebug()<<"UP from LAST SHOT"<<lastX<<lastY;
+                //qDebug()<<"UP from LAST SHOT"<<lastX<<lastY;
 
                 rval = std::make_pair(lastX,lastY-1);
 
                 while (player2HitorMiss[rval.first][rval.second]==hit) //if the intended shot square is a known hit, move another square in the case direction
                 {
-                    qDebug()<<"INTEDEND SHOT SQUARE ALREADY HIT, UP AGAIN";
+                    //qDebug()<<"INTEDEND SHOT SQUARE ALREADY HIT, UP AGAIN";
                     rval.second-=1;
                 }
 
                 if(player2HitorMiss[rval.first][rval.second]==miss) //if the inted shot square is a known miss, check if already reversed 2 times if not reverse directio
                 {
-                    qDebug()<<"UP AGAIN ENCOUNTERED MISS";
+                    //qDebug()<<"UP AGAIN ENCOUNTERED MISS";
                     reverseCounter++;
                     if (reverseCounter == 2)
                     {
-                        qDebug()<<"REVERSE COUNTER ==2";
+                        //qDebug()<<"REVERSE COUNTER ==2";
                         orientation = 0;
                         reverseCounter = 0;
                         return generateTargetShot();
@@ -799,23 +799,23 @@ std::pair<int,int> GameScreen::generateTargetShot()
                 }
                 break;
             case down:
-                qDebug()<<"DOWN from LAST SHOT"<<lastX<<lastY;
+                //qDebug()<<"DOWN from LAST SHOT"<<lastX<<lastY;
 
                 rval = std::make_pair(lastX,lastY+1);
 
                 while (player2HitorMiss[rval.first][rval.second]==hit)
                 {
-                    qDebug()<<"INTEDEND SHOT SQUARE ALREADY HIT, DOWN AGAIN";
+                    //qDebug()<<"INTEDEND SHOT SQUARE ALREADY HIT, DOWN AGAIN";
                     rval.second+=1;
                 }
 
                 if(player2HitorMiss[rval.first][rval.second]==miss)
                 {
-                    qDebug()<<"DOWN AGAIN ENCOUNTERED MISS";
+                    //qDebug()<<"DOWN AGAIN ENCOUNTERED MISS";
                     reverseCounter++;
                     if (reverseCounter == 2)
                     {
-                        qDebug()<<"REVERSE COUNTER ==2";
+                        //qDebug()<<"REVERSE COUNTER ==2";
                         orientation = 0;
                         reverseCounter = 0;
                         return generateTargetShot();
@@ -828,23 +828,23 @@ std::pair<int,int> GameScreen::generateTargetShot()
 
                 break;
             case left_:
-                qDebug()<<"LEFT from LAST SHOT"<<lastX<<lastY;
+                //qDebug()<<"LEFT from LAST SHOT"<<lastX<<lastY;
 
                 rval = std::make_pair(lastX-1,lastY);
 
                 while (player2HitorMiss[rval.first][rval.second]==hit)
                 {
-                    qDebug()<<"INTEDEND SHOT SQUARE ALREADY HIT, LEFT AGAIN";
+                    //qDebug()<<"INTEDEND SHOT SQUARE ALREADY HIT, LEFT AGAIN";
                     rval.first-=1;
                 }
 
                 if(player2HitorMiss[rval.first][rval.second]==miss)
                 {
-                    qDebug()<<"LEFT AGAIN ENCOUNTERED MISS";
+                    //qDebug()<<"LEFT AGAIN ENCOUNTERED MISS";
                     reverseCounter++;
                     if (reverseCounter == 2)
                     {
-                        qDebug()<<"REVERSE COUNTER ==2";
+                        //qDebug()<<"REVERSE COUNTER ==2";
                         orientation = 0;
                         reverseCounter = 0;
                         return generateTargetShot();
@@ -857,23 +857,23 @@ std::pair<int,int> GameScreen::generateTargetShot()
 
                 break;
             case right_:
-                qDebug()<<"RIGHT from LAST SHOT:"<<lastX<<lastY;
+                //qDebug()<<"RIGHT from LAST SHOT:"<<lastX<<lastY;
 
                 rval = std::make_pair(lastX+1,lastY);
 
                 while (player2HitorMiss[rval.first][rval.second]==hit)
                 {
-                    qDebug()<<"INTEDEND SHOT SQUARE ALREADY HIT, RIGHT AGAIN";
+                    //qDebug()<<"INTEDEND SHOT SQUARE ALREADY HIT, RIGHT AGAIN";
                     rval.first+=1;
                 }
 
                 if(player2HitorMiss[rval.first][rval.second]==miss)
                 {
-                    qDebug()<<"RIGHT AGAIN ENCOUNTERED MISS";
+                    //qDebug()<<"RIGHT AGAIN ENCOUNTERED MISS";
                     reverseCounter++;
                     if (reverseCounter == 2)
                     {
-                        qDebug()<<"REVERSE COUNTER ==2";
+                        //qDebug()<<"REVERSE COUNTER ==2";
                         orientation = 0;
                         reverseCounter = 0;
                         return generateTargetShot();
@@ -891,7 +891,7 @@ std::pair<int,int> GameScreen::generateTargetShot()
                 reverseCounter++;
                 if (reverseCounter == 2)
                 {
-                    qDebug()<<"REVERSE COUNTER ==2";
+                    //qDebug()<<"REVERSE COUNTER ==2";
                     orientation = 0;
                     reverseCounter = 0;
                     return generateTargetShot();
@@ -917,7 +917,7 @@ std::pair<int,int> GameScreen::generateTargetShot()
 void GameScreen::on_leftSpecial_clicked()
 {
     ui->leftSpecial->hide();
-    qDebug()<<"Left Special Clicked";
+    //qDebug()<<"Left Special Clicked";
     player1Special = false;
     player1NextMoveSpecial = true;
     //increased required consecutive shots
@@ -932,7 +932,7 @@ void GameScreen::on_leftSpecial_clicked()
 void GameScreen::on_rightSpecial_clicked()
 {
     ui->rightSpecial->hide();
-    qDebug()<<"Right Special Clicked";
+    //qDebug()<<"Right Special Clicked";
     player2Special = false;
     player2NextMoveSpecial = true;
     //increased required consecutive shots
